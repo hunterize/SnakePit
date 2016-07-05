@@ -10,8 +10,13 @@ namespace SnakEngine
 		float y;
 	};
 
-	struct Color
+	class Color
 	{
+	public:
+		Color() {};
+		Color(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha):
+			r(red), g(green), b(blue), a(alpha)
+		{}
 		GLubyte r;
 		GLubyte g;
 		GLubyte b;

@@ -5,6 +5,7 @@
 #include <SnakEngine\Camera2D.h>
 #include <SnakEngine\InputManager.h>
 #include <SnakEngine\SpriteBatch.h>
+#include <SnakEngine\SpriteFont.h>
 #include <SnakEngine\SnakEngine.h>
 #include <SnakEngine\Timing.h>
 #include <SnakEngine\Errors.h>
@@ -48,11 +49,16 @@ private:
 	void TraceFPS();
 	void CheckGameStatus();
 	bool IsGameOver();
+	void DrawHud();
 
 	SnakEngine::SWindow m_cWindow;
 	SnakEngine::GLSLProgram m_cShader;
 	SnakEngine::InputManager m_cInputManager;
+
+
 	SnakEngine::Camera2D m_cCamera;
+	SnakEngine::Camera2D m_cHudCamera;
+
 	//for agents
 	SnakEngine::SpriteBatch m_cSpriteBatch;
 
@@ -82,5 +88,9 @@ private:
 	int m_iHumansKilled;
 	int m_iZombiesKilled;
 	int m_iHumansInfected;
+
+	//sprite font
+	SnakEngine::SpriteBatch m_cHudSpriteBatch;
+	SnakEngine::SpriteFont* m_pSpriteFont;
 };
 

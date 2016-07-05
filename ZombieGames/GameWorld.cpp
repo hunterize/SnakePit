@@ -58,8 +58,16 @@ void GameWorld::InitSystem()
 	InitShaders();
 
 	m_cSpriteBatch.Init();
+	m_cHudSpriteBatch.Init();
+
+	//initialize sprite font
+	m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/chintzy.ttf", 64);
 
 	m_cCamera.Init(m_iScreenWidth, m_iScreenHeight);
+	m_cHudCamera.Init(m_iScreenWidth, m_iScreenHeight);
+	m_cHudCamera.SetPosition(glm::vec2(m_iScreenWidth / 2, m_iScreenHeight / 2));
+
+
 }
 
 void GameWorld::InitLevel()
@@ -223,10 +231,12 @@ void GameWorld::UpdateCamera(float elapseTime)
 	if (m_cInputManager.isKeyDown(SDLK_e))
 	{
 		m_cCamera.SetScale(m_cCamera.GetScale() + SCALE_SPEED * elapseTime);
+		m_cHudCamera.SetScale(m_cCamera.GetScale() + SCALE_SPEED * elapseTime);
 	}
 	if (m_cInputManager.isKeyDown(SDLK_q))
 	{
 		m_cCamera.SetScale(m_cCamera.GetScale() - SCALE_SPEED * elapseTime);
+		m_cHudCamera.SetScale(m_cCamera.GetScale() - SCALE_SPEED * elapseTime);
 	}
 
 	m_cCamera.SetPosition(m_pPlayer->GetPosition());
@@ -248,6 +258,8 @@ void GameWorld::UpdateCamera(float elapseTime)
 	*/
 
 	m_cCamera.Update();
+
+	m_cHudCamera.Update();
 
 }
 
@@ -503,9 +515,30 @@ void GameWorld::DrawGame()
 
 	m_cSpriteBatch.RenderBatch();
 
+	//draw HUD
+	DrawHud();
+
 	m_cShader.unuse();
 
 	m_cWindow.SwapBuffer();
 
+}
+
+void GameWorld::DrawHud()
+{
+	char buffer[256];
+
+	glm::mat4 projectionMatrix = m_cHudCamera.GetCameraMatrix();
+	GLint pUniform = m_cShader.GetUniformLocation("P");
+	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+	m_cHudSpriteBatch.Begin();
+
+	sprintf_s(buffer, "Humans are alive: %d", m_cHumens.size() - 1);
+	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5),0.0f, SnakEngine::Color(255, 255, 255, 255));
+
+
+	m_cHudSpriteBatch.End();
+	m_cHudSpriteBatch.RenderBatch();
 }
 
