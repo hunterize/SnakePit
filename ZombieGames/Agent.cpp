@@ -170,7 +170,7 @@ void Agent::CollideWithTile(glm::vec2 tilePos)
 	float xDepth = CLOSEST_X_DISTANCE - abs(disVec.x);
 	float yDepth = CLOSEST_Y_DISTANCE - abs(disVec.y);
 
-	//alway true
+	
 	if (xDepth > 0 && yDepth > 0)
 	{
 		if (std::max(xDepth, 0.0f) < std::max(yDepth, 0.0f))
