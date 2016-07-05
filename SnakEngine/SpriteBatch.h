@@ -12,8 +12,31 @@
 
 namespace SnakEngine
 {
-	struct Glyph
+	class Glyph
 	{
+	public:
+		Glyph() {};
+		Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color)
+		{
+			m_uiTexture = texture;
+			m_fDepth = depth;
+
+			m_cTopLeft.color = color;
+			m_cTopLeft.SetPosition(destRect.x, destRect.y + destRect.w);
+			m_cTopLeft.SetUV(uvRect.x, uvRect.y + uvRect.w);
+
+			m_cBottomLeft.color = color;
+			m_cBottomLeft.SetPosition(destRect.x, destRect.y);
+			m_cBottomLeft.SetUV(uvRect.x, uvRect.y);
+
+			m_cBottomRight.color = color;
+			m_cBottomRight.SetPosition(destRect.x + destRect.z, destRect.y);
+			m_cBottomRight.SetUV(uvRect.x + uvRect.z, uvRect.y);
+
+			m_cTopRight.color = color;
+			m_cTopRight.SetPosition(destRect.x + destRect.z, destRect.y + destRect.w);
+			m_cTopRight.SetUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+		}
 		GLuint m_uiTexture;
 		GLfloat m_fDepth;
 
@@ -58,8 +81,12 @@ namespace SnakEngine
 	private:
 		GLuint m_uiVbo;
 		GLuint m_uiVao;
+
 		GlyphSortType m_eSortType;
-		std::vector<Glyph*> m_Glyphs;
+
+		std::vector<Glyph> m_Glyphs;
+		std::vector<Glyph*> m_GlyphPointers;
+
 		std::vector<CRenderBatch> m_RenderBatches;
 
 		void CreateRenderBatches();

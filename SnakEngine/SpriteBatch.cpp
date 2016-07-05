@@ -25,41 +25,30 @@ namespace SnakEngine
 		m_RenderBatches.clear();
 
 		//delete glyphs object to avoid memory leak
-		for (int i = 0; i < m_Glyphs.size(); i++)
-		{
-			delete m_Glyphs[i];
-		}
+		//for (int i = 0; i < m_Glyphs.size(); i++)
+		//{
+		//	delete m_Glyphs[i];
+		//}
 		m_Glyphs.clear();
 	}
 	void SpriteBatch::End()
 	{
+		//store glyph pointers
+		m_GlyphPointers.resize(m_Glyphs.size());
+		for (int i = 0; i < m_Glyphs.size(); i++)
+		{
+			m_GlyphPointers[i] = &m_Glyphs[i];
+		}
+
 		SortGlyphs();
+
 		CreateRenderBatches();
 	}
+
 	void SpriteBatch::Draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color)
 	{
 
-		Glyph* newGlyph = new Glyph;
-		newGlyph->m_uiTexture = texture;
-		newGlyph->m_fDepth = depth;
-
-		newGlyph->m_cTopLeft.color = color;
-		newGlyph->m_cTopLeft.SetPosition(destRect.x, destRect.y + destRect.w);
-		newGlyph->m_cTopLeft.SetUV(uvRect.x, uvRect.y + uvRect.w);
-
-		newGlyph->m_cBottomLeft.color = color;
-		newGlyph->m_cBottomLeft.SetPosition(destRect.x, destRect.y);
-		newGlyph->m_cBottomLeft.SetUV(uvRect.x, uvRect.y);
-
-		newGlyph->m_cBottomRight.color = color;
-		newGlyph->m_cBottomRight.SetPosition(destRect.x + destRect.z, destRect.y);
-		newGlyph->m_cBottomRight.SetUV(uvRect.x + uvRect.z, uvRect.y);
-
-		newGlyph->m_cTopRight.color = color;
-		newGlyph->m_cTopRight.SetPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-		newGlyph->m_cTopRight.SetUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-		m_Glyphs.push_back(newGlyph);
+		m_Glyphs.emplace_back(destRect, uvRect, texture, depth, color);
 
 	}
 	void SpriteBatch::RenderBatch()
@@ -114,40 +103,40 @@ namespace SnakEngine
 	{
 		//this whole vertices in the vbo
 		std::vector<Vertex> vertices;
-		vertices.resize(m_Glyphs.size() * 6); //each glyph has 6 vertices (two triangles)
+		vertices.resize(m_GlyphPointers.size() * 6); //each glyph has 6 vertices (two triangles)
 
-		if (m_Glyphs.empty())
+		if (m_GlyphPointers.empty())
 			return;
 
 		int cv = 0; //current vertex
 		int offset = 0;
-		m_RenderBatches.emplace_back(offset, 6, m_Glyphs[0]->m_uiTexture);
-		vertices[cv++] = m_Glyphs[0]->m_cTopLeft;
-		vertices[cv++] = m_Glyphs[0]->m_cBottomLeft;
-		vertices[cv++] = m_Glyphs[0]->m_cBottomRight;
-		vertices[cv++] = m_Glyphs[0]->m_cBottomRight;
-		vertices[cv++] = m_Glyphs[0]->m_cTopRight;
-		vertices[cv++] = m_Glyphs[0]->m_cTopLeft;
+		m_RenderBatches.emplace_back(offset, 6, m_GlyphPointers[0]->m_uiTexture);
+		vertices[cv++] = m_GlyphPointers[0]->m_cTopLeft;
+		vertices[cv++] = m_GlyphPointers[0]->m_cBottomLeft;
+		vertices[cv++] = m_GlyphPointers[0]->m_cBottomRight;
+		vertices[cv++] = m_GlyphPointers[0]->m_cBottomRight;
+		vertices[cv++] = m_GlyphPointers[0]->m_cTopRight;
+		vertices[cv++] = m_GlyphPointers[0]->m_cTopLeft;
 		offset += 6;
 
 
 		//set renderbatch by current glyph
-		for (int cg = 1; cg < m_Glyphs.size(); cg++)
+		for (int cg = 1; cg < m_GlyphPointers.size(); cg++)
 		{
-			if (m_Glyphs[cg]->m_uiTexture != m_Glyphs[cg - 1]->m_uiTexture)
+			if (m_GlyphPointers[cg]->m_uiTexture != m_GlyphPointers[cg - 1]->m_uiTexture)
 			{
-				m_RenderBatches.emplace_back(offset, 6, m_Glyphs[cg]->m_uiTexture);
+				m_RenderBatches.emplace_back(offset, 6, m_GlyphPointers[cg]->m_uiTexture);
 			}
 			else
 			{
 				m_RenderBatches.back().m_numVertices += 6;
 			}
-			vertices[cv++] = m_Glyphs[cg]->m_cTopLeft;
-			vertices[cv++] = m_Glyphs[cg]->m_cBottomLeft;
-			vertices[cv++] = m_Glyphs[cg]->m_cBottomRight;
-			vertices[cv++] = m_Glyphs[cg]->m_cBottomRight;
-			vertices[cv++] = m_Glyphs[cg]->m_cTopRight;
-			vertices[cv++] = m_Glyphs[cg]->m_cTopLeft;
+			vertices[cv++] = m_GlyphPointers[cg]->m_cTopLeft;
+			vertices[cv++] = m_GlyphPointers[cg]->m_cBottomLeft;
+			vertices[cv++] = m_GlyphPointers[cg]->m_cBottomRight;
+			vertices[cv++] = m_GlyphPointers[cg]->m_cBottomRight;
+			vertices[cv++] = m_GlyphPointers[cg]->m_cTopRight;
+			vertices[cv++] = m_GlyphPointers[cg]->m_cTopLeft;
 			offset += 6;
 		}
 
@@ -168,13 +157,13 @@ namespace SnakEngine
 		switch (m_eSortType)
 		{
 		case GlyphSortType::BACK_TO_FRONT:
-			std::stable_sort(m_Glyphs.begin(), m_Glyphs.end(), CompareBackToFront );
+			std::stable_sort(m_GlyphPointers.begin(), m_GlyphPointers.end(), CompareBackToFront );
 			break;
 		case GlyphSortType::FRONT_TO_BACK:
-			std::stable_sort(m_Glyphs.begin(), m_Glyphs.end(), CompareFrontToBack);
+			std::stable_sort(m_GlyphPointers.begin(), m_GlyphPointers.end(), CompareFrontToBack);
 			break;
 		case GlyphSortType::TEXTURE:
-			std::stable_sort(m_Glyphs.begin(), m_Glyphs.end(), CompareTexture);
+			std::stable_sort(m_GlyphPointers.begin(), m_GlyphPointers.end(), CompareTexture);
 			break;
 		}
 	}

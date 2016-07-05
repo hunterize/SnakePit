@@ -72,9 +72,9 @@ void GameWorld::InitLevel()
 	//the first element of human vector is player
 	m_cHumens.push_back(m_pPlayer);
 
-	m_pPlayer->AddGun(new Gun("Magnum", 1000, 1, 0.0f, 100.0f, BULLET_SPEED * 1.5f));
-	m_pPlayer->AddGun(new Gun("Shotgun", 700, 6, 0.6f, 60.0f, BULLET_SPEED * 2.0f));
-	m_pPlayer->AddGun(new Gun("MP5", 200, 1, 0.1f, 40.0f, BULLET_SPEED * 3.0f));
+	m_pPlayer->AddGun(new Gun("Magnum", 1000, 1, 0.0f, 200.0f, BULLET_SPEED * 1.5f));
+	m_pPlayer->AddGun(new Gun("Shotgun", 700, 6, 0.6f, 100.0f, BULLET_SPEED * 2.0f));
+	m_pPlayer->AddGun(new Gun("MP5", 200, 1, 0.1f, 70.0f, BULLET_SPEED * 3.0f));
 
 
 	std::mt19937 randomEngine;
@@ -120,6 +120,8 @@ void GameWorld::GameLoop()
 	SnakEngine::FpsLimiter fpsLimiter;
 	fpsLimiter.SetTargetFPS(0.0f);
 	float timeSpan = 0.0f;
+	//delta time for the maxine value of physic time
+	float dt = 1 / 60.0;
 
 	while (m_eGameState == GameState::PLAY)
 	{
@@ -131,11 +133,19 @@ void GameWorld::GameLoop()
 
 		ProcessInput();
 
-		UpdateAgent(timeSpan); 
+		while (timeSpan > 0.0)
+		{
+			float deltaTime = std::min(timeSpan, dt);
 
-		UpdateBullet(timeSpan);
 
-		UpdateCamera(timeSpan);
+			UpdateAgent(deltaTime);
+
+			UpdateBullet(deltaTime);
+
+			UpdateCamera(deltaTime);
+
+			timeSpan -= deltaTime;
+		}
 
 		DrawGame();
 
@@ -163,7 +173,7 @@ void GameWorld::TraceFPS()
 	//print only noce every 10 frames
 	static int frameCounter = 0;
 	frameCounter++;
-	if (frameCounter == 1000)
+	if (frameCounter == 10)
 	{
 		std::cout << m_fFPS << std::endl;
 		frameCounter = 0;
