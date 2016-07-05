@@ -475,14 +475,22 @@ void GameWorld::DrawGame()
 	//begin to draw agents and bullets
 	m_cSpriteBatch.Begin();
 
+	
+
 	for each (Human* p in m_cHumens)
 	{
-		p->Draw(m_cSpriteBatch);
+		if (m_cCamera.IsBoxInView(p->GetPosition(), glm::vec2(p->GetRadius() * 2.0f)))
+		{
+			p->Draw(m_cSpriteBatch);
+		}
 	}
 
 	for each(Zombie* z in m_cZombies)
 	{
-		z->Draw(m_cSpriteBatch);
+		if (m_cCamera.IsBoxInView(z->GetPosition(), glm::vec2(z->GetRadius() * 2.0f)))
+		{
+			z->Draw(m_cSpriteBatch);
+		}
 	}
 
 	for each(Bullet b in m_cBullet)

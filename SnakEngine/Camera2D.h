@@ -17,6 +17,7 @@ namespace SnakEngine
 		void Update();
 		glm::vec2 ConvertScreenToWorld(glm::vec2 screenCoord);
 
+		bool IsBoxInView(const glm::vec2& position, const glm::vec2& dimension);
 
 		//settters
 		void SetPosition(const glm::vec2& newPosition)

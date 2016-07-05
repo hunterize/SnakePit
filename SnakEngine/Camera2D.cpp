@@ -51,10 +51,12 @@ namespace SnakEngine
 		}
 	}
 
+	//convert screen coordinate to the world coordinate
 	glm::vec2 Camera2D::ConvertScreenToWorld(glm::vec2 screenCoord)
 	{
 		screenCoord.y = m_iScreenHeight - screenCoord.y;
 
+		//relative position to the camera position (centre of the screen)
 		screenCoord -= glm::vec2(m_iScreenWidth / 2, m_iScreenHeight / 2);
 
 		screenCoord /= m_fScale;
@@ -64,4 +66,31 @@ namespace SnakEngine
 		return screenCoord;
 	}
 
+	//AABB collision check for the agent and camera to do camera culling
+	// position - agent position
+	// dimension - agent collision dimension
+	bool Camera2D::IsBoxInView(const glm::vec2& position, const glm::vec2& dimension)
+	{
+		//the actual camera dimension
+		glm::vec2 cameraDimension = glm::vec2(m_iScreenWidth, m_iScreenHeight) / (m_fScale);
+
+		const float CLOSEST_X_DISTANCE = dimension.x / 2.0f + cameraDimension.x / 2.0f;
+		const float CLOSEST_Y_DISTANCE = dimension.y / 2.0f + cameraDimension.y / 2.0f;
+
+		glm::vec2 agentCentrePosition = position + dimension / 2.0f;
+
+		//distance vector from agent to camera
+		glm::vec2 dist = agentCentrePosition - m_cPosition;
+
+		//get depth of the collision
+		float xDepth = CLOSEST_X_DISTANCE - abs(dist.x);
+		float yDepth = CLOSEST_Y_DISTANCE - abs(dist.y);
+
+		if (xDepth > 0 && yDepth > 0)
+		{
+			return true;
+		}
+
+		return false;
+	}
 }
