@@ -80,8 +80,8 @@ void GameWorld::InitLevel()
 	//the first element of human vector is player
 	m_cHumens.push_back(m_pPlayer);
 
-	m_pPlayer->AddGun(new Gun("Magnum", 1000, 1, 0.0f, 200.0f, BULLET_SPEED * 1.5f));
-	m_pPlayer->AddGun(new Gun("Shotgun", 700, 6, 0.6f, 100.0f, BULLET_SPEED * 2.0f));
+	m_pPlayer->AddGun(new Gun("Magnum", 800, 1, 0.0f, 200.0f, BULLET_SPEED * 1.5f));
+	m_pPlayer->AddGun(new Gun("Shotgun", 500, 6, 0.6f, 100.0f, BULLET_SPEED * 2.0f));
 	m_pPlayer->AddGun(new Gun("MP5", 200, 1, 0.1f, 70.0f, BULLET_SPEED * 3.0f));
 
 
@@ -129,7 +129,7 @@ void GameWorld::GameLoop()
 	fpsLimiter.SetTargetFPS(0.0f);
 	float timeSpan = 0.0f;
 	//delta time for the maxine value of physic time
-	float dt = 1 / 60.0;
+	float dt = 1 / 10.0;
 
 	while (m_eGameState == GameState::PLAY)
 	{
@@ -155,11 +155,16 @@ void GameWorld::GameLoop()
 			timeSpan -= deltaTime;
 		}
 
+		//UpdateAgent(timeSpan);
+
+		//UpdateBullet(timeSpan);
+
+		//UpdateCamera(timeSpan);
+
 		DrawGame();
 
 		m_fFPS = fpsLimiter.End();
-
-		TraceFPS();
+		//TraceFPS();
 	}
 
 	if (m_eGameState == GameState::WIN)
@@ -231,12 +236,12 @@ void GameWorld::UpdateCamera(float elapseTime)
 	if (m_cInputManager.isKeyDown(SDLK_e))
 	{
 		m_cCamera.SetScale(m_cCamera.GetScale() + SCALE_SPEED * elapseTime);
-		m_cHudCamera.SetScale(m_cCamera.GetScale() + SCALE_SPEED * elapseTime);
+		//m_cHudCamera.SetScale(m_cHudCamera.GetScale() + SCALE_SPEED * elapseTime);
 	}
 	if (m_cInputManager.isKeyDown(SDLK_q))
 	{
 		m_cCamera.SetScale(m_cCamera.GetScale() - SCALE_SPEED * elapseTime);
-		m_cHudCamera.SetScale(m_cCamera.GetScale() - SCALE_SPEED * elapseTime);
+		//m_cHudCamera.SetScale(m_cHudCamera.GetScale() - SCALE_SPEED * elapseTime);
 	}
 
 	m_cCamera.SetPosition(m_pPlayer->GetPosition());
@@ -534,11 +539,16 @@ void GameWorld::DrawHud()
 
 	m_cHudSpriteBatch.Begin();
 
-	sprintf_s(buffer, "Humans are alive: %d", m_cHumens.size() - 1);
-	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.5),0.0f, SnakEngine::Color(255, 255, 255, 255));
+	sprintf_s(buffer, "Humans are alive : %d", m_cHumens.size() - 1);
+	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.4),0.0f, SnakEngine::Color(255, 255, 255, 255));
+
+
+	sprintf_s(buffer, "FPS : %0.1f", m_fFPS);
+	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, m_iScreenHeight - 26), glm::vec2(0.4), 0.0f, SnakEngine::Color(255, 255, 255, 255));
 
 
 	m_cHudSpriteBatch.End();
 	m_cHudSpriteBatch.RenderBatch();
 }
+
 

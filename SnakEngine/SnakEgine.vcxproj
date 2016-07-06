@@ -94,7 +94,8 @@
     </Lib>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)Dependency\lib\SDL\SDL2.dll" "$(Outdir)"
-xcopy /y "$(SolutionDir)Dependency\lib\GLEW\glew32.dll" "$(Outdir)"</Command>
+xcopy /y "$(SolutionDir)Dependency\lib\GLEW\glew32.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

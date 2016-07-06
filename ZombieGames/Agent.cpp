@@ -2,7 +2,7 @@
 
 glm::vec2 CollisionTile::agentPosition = glm::vec2(0.0f);
 
-Agent::Agent() : AGENT_RADIUS(25.0f)
+Agent::Agent() : AGENT_RADIUS(24.0f)
 {
 }
 

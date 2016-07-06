@@ -41,7 +41,7 @@ namespace SnakEngine
 
 	void FpsLimiter::CalculateFPS()
 	{
-		static const int NUM_SAMPLES = 10;
+		static const int NUM_SAMPLES = 100;
 		static float frameTimes[NUM_SAMPLES];
 		static int currentFrame = 0;
 
