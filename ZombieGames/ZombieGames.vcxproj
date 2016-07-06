@@ -128,7 +128,7 @@
       <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -172,6 +172,7 @@
     <ClInclude Include="Human.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
@@ -183,10 +184,17 @@
     <None Include="Shaders\textureShading.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="icon1.ico" />
+    <Image Include="icon2.ico" />
     <Image Include="Textures\circle.png" />
     <Image Include="Textures\glass.png" />
     <Image Include="Textures\light_bricks.png" />
     <Image Include="Textures\red_bricks.png" />
+    <Image Include="Zombie.ico" />
+    <Image Include="Zombie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ZombieGames.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

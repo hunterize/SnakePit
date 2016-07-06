@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 #include <SnakEngine\SWindow.h>
 #include <SnakEngine\GLSLProgram.h>
 #include <SnakEngine\Camera2D.h>
@@ -20,6 +22,11 @@
 #include "Human.h"
 #include "Zombie.h"
 #include "Gun.h"
+
+
+#include "resource.h"
+#include <SDL\SDL.h>
+#include <SDL\SDL_syswm.h>
 
 enum class GameState
 {

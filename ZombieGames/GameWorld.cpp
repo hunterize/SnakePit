@@ -51,6 +51,16 @@ void GameWorld::InitSystem()
 {
 	SnakEngine::InitEngine();
 	m_cWindow.Create("ZombieGame", m_iScreenWidth, m_iScreenHeight, 0);
+
+	//load Icon
+	HINSTANCE handle = GetModuleHandle(NULL);
+	HICON icon = LoadIcon(handle, MAKEINTRESOURCE(IDI_ICON1));
+	SDL_SysWMinfo wminfo;
+	SDL_VERSION(&wminfo.version)
+	SDL_GetWindowWMInfo(m_cWindow.GetWindow(), &wminfo);
+	HWND hwnd = wminfo.info.win.window;
+	SetClassLong(hwnd, GCL_HICON, (LONG)icon);
+
 	
 	//grey background color
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

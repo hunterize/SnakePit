@@ -19,6 +19,7 @@ namespace SnakEngine
 
 		int GetWidth() { return m_iWidth; }
 		int GetHeight() { return m_iHeight; }
+		SDL_Window* GetWindow() { return m_pWindow; }
 
 	private:
 		SDL_Window* m_pWindow;
