@@ -2,8 +2,10 @@
 
 
 
-Gun::Gun(std::string name, float fireSpan, int bulletsPerShot, float spread, float bulletDamage, float bulletSpeed):
-	m_csName(name), m_fFireSpan(fireSpan), m_iBulletPerShot(bulletsPerShot), m_iSpread(spread), m_fDamage(bulletDamage), m_fSpeed(bulletSpeed)
+Gun::Gun(std::string name, float fireSpan, int bulletsPerShot, float spread, float bulletDamage, float bulletSpeed, SnakEngine::SoundEffect fireEffect):
+	m_csName(name), m_fFireSpan(fireSpan), m_iBulletPerShot(bulletsPerShot), 
+	m_iSpread(spread), m_fDamage(bulletDamage), m_fSpeed(bulletSpeed),
+	m_cFireEffect(fireEffect)
 {
 
 }
@@ -31,6 +33,8 @@ void Gun::Fire(const glm::vec2& direction, const glm::vec2& position, std::vecto
 {
 	static std::mt19937 randomEngine(time(nullptr));
 	std::uniform_real_distribution<float> randRotate(-m_iSpread, m_iSpread);
+
+	m_cFireEffect.Play();
 
 	for (int i = 0; i < m_iBulletPerShot; i++)
 	{

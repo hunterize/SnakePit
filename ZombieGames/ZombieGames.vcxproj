@@ -176,7 +176,10 @@
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Levels\level1.txt" />
+    <Text Include="Levels\level1.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </Text>
     <Text Include="Textures\credits.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -184,8 +187,6 @@
     <None Include="Shaders\textureShading.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon1.ico" />
-    <Image Include="icon2.ico" />
     <Image Include="Textures\circle.png" />
     <Image Include="Textures\glass.png" />
     <Image Include="Textures\light_bricks.png" />

@@ -72,11 +72,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)\Dependency\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(solutiondir)dependency\lib\GLEW;$(solutiondir)dependency\lib\sdl;$(solutiondir)dependency\lib\ttf;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(solutiondir)dependency\lib\GLEW;$(solutiondir)dependency\lib\sdl;$(solutiondir)dependency\lib\ttf;$(solutiondir)dependency\lib\Mixer;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\Dependency\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(solutiondir)dependency\lib\GLEW;$(solutiondir)dependency\lib\sdl;$(solutiondir)dependency\lib\ttf;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(solutiondir)dependency\lib\GLEW;$(solutiondir)dependency\lib\sdl;$(solutiondir)dependency\lib\ttf;$(solutiondir)dependency\lib\Mixer;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,12 +90,13 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;SDL2test.lib;opengl32.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;SDL2test.lib;opengl32.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)Dependency\lib\SDL\SDL2.dll" "$(Outdir)"
 xcopy /y "$(SolutionDir)Dependency\lib\GLEW\glew32.dll" "$(Outdir)"
-xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"</Command>
+xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,12 +127,13 @@ xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"</Command>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;SDL2test.lib;opengl32.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;SDL2test.lib;opengl32.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)Dependency\lib\SDL\SDL2.dll" "$(Outdir)"
 xcopy /y "$(SolutionDir)Dependency\lib\GLEW\glew32.dll" "$(Outdir)"
-xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"</Command>
+xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,6 +156,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"</Command>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Camera2D.h" />
     <ClInclude Include="Errors.h" />
     <ClInclude Include="GLSLProgram.h" />
@@ -173,6 +176,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"</Command>
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera2D.cpp" />
     <ClCompile Include="Errors.cpp" />
     <ClCompile Include="GLSLProgram.cpp" />

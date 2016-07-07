@@ -11,6 +11,7 @@
 #include <SnakEngine\SnakEngine.h>
 #include <SnakEngine\Timing.h>
 #include <SnakEngine\Errors.h>
+#include <SnakEngine\AudioEngine.h>
 
 
 #include <iostream>
@@ -99,5 +100,8 @@ private:
 	//sprite font
 	SnakEngine::SpriteBatch m_cHudSpriteBatch;
 	SnakEngine::SpriteFont* m_pSpriteFont;
+
+	//audio engine
+	SnakEngine::AudioEngine m_cAudioEngine;
 };
 

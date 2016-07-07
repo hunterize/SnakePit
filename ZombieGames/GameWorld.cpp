@@ -4,8 +4,8 @@
 namespace
 {
 	const float PLAYER_SPEED = 350.0f;
-	const float HUMAN_SPEED = 350.0f;
-	const float ZOMBIE_SPEED = 250.0f;
+	const float HUMAN_SPEED = 200.0f;
+	const float ZOMBIE_SPEED = 100.0f;
 	const float SCALE_SPEED = 0.2f;
 	const float BULLET_SPEED = 1250.0f;
 }
@@ -50,6 +50,10 @@ void GameWorld::Run()
 void GameWorld::InitSystem()
 {
 	SnakEngine::InitEngine();
+	
+	//audio engine should be initialized after SDL_init is called.
+	m_cAudioEngine.Init();
+
 	m_cWindow.Create("ZombieGame", m_iScreenWidth, m_iScreenHeight, 0);
 
 	//load Icon
@@ -71,11 +75,15 @@ void GameWorld::InitSystem()
 	m_cHudSpriteBatch.Init();
 
 	//initialize sprite font
-	m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/chintzy.ttf", 64);
-
+	//m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/chintzy.ttf", 64);
+	m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/razerrrg_.ttf", 64);
+	
+	//initialize camera
 	m_cCamera.Init(m_iScreenWidth, m_iScreenHeight);
 	m_cHudCamera.Init(m_iScreenWidth, m_iScreenHeight);
 	m_cHudCamera.SetPosition(glm::vec2(m_iScreenWidth / 2, m_iScreenHeight / 2));
+
+	//initialize 
 
 
 }
@@ -90,9 +98,9 @@ void GameWorld::InitLevel()
 	//the first element of human vector is player
 	m_cHumens.push_back(m_pPlayer);
 
-	m_pPlayer->AddGun(new Gun("Magnum", 800, 1, 0.0f, 200.0f, BULLET_SPEED * 1.5f));
-	m_pPlayer->AddGun(new Gun("Shotgun", 500, 6, 0.6f, 100.0f, BULLET_SPEED * 2.0f));
-	m_pPlayer->AddGun(new Gun("MP5", 200, 1, 0.1f, 70.0f, BULLET_SPEED * 3.0f));
+	m_pPlayer->AddGun(new Gun("Magnum", 800, 1, 0.0f, 200.0f, BULLET_SPEED * 1.5f, m_cAudioEngine.LoadSoundEffect("Sound/shots/pistol.wav")));
+	m_pPlayer->AddGun(new Gun("Shotgun", 500, 6, 0.6f, 100.0f, BULLET_SPEED * 2.0f, m_cAudioEngine.LoadSoundEffect("Sound/shots/shotgun.wav")));
+	m_pPlayer->AddGun(new Gun("MP5", 200, 1, 0.1f, 70.0f, BULLET_SPEED * 3.0f, m_cAudioEngine.LoadSoundEffect("Sound/shots/cg1.wav")));
 
 
 	std::mt19937 randomEngine;
@@ -121,6 +129,11 @@ void GameWorld::InitLevel()
 	}
 
 
+	//Initialize background music
+	SnakEngine::Music music = m_cAudioEngine.LoadMusic("Sound/XYZ.ogg");
+	music.Play(-1);
+
+
 }
 
 void GameWorld::InitShaders()
@@ -139,7 +152,7 @@ void GameWorld::GameLoop()
 	fpsLimiter.SetTargetFPS(0.0f);
 	float timeSpan = 0.0f;
 	//delta time for the maxine value of physic time
-	float dt = 1 / 10.0;
+	float dt = 1 / 15.0;
 
 	while (m_eGameState == GameState::PLAY)
 	{
@@ -550,11 +563,18 @@ void GameWorld::DrawHud()
 	m_cHudSpriteBatch.Begin();
 
 	sprintf_s(buffer, "Humans are alive : %d", m_cHumens.size() - 1);
-	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.4),0.0f, SnakEngine::Color(255, 255, 255, 255));
+	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, 0), glm::vec2(0.4),0.0f, SnakEngine::Color(255, 255, 0, 255));
 
-
-	sprintf_s(buffer, "FPS : %0.1f", m_fFPS);
-	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, m_iScreenHeight - 26), glm::vec2(0.4), 0.0f, SnakEngine::Color(255, 255, 255, 255));
+	static float previousTicks = SDL_GetTicks();
+	float currentTicks = SDL_GetTicks();
+	static float FPS = m_fFPS;
+	if (currentTicks - previousTicks > 100)
+	{
+		FPS = m_fFPS;
+		previousTicks = currentTicks;
+	}
+	sprintf_s(buffer, "FPS : %0.1f", FPS);
+	m_pSpriteFont->draw(m_cHudSpriteBatch, buffer, glm::vec2(0, m_iScreenHeight - 26), glm::vec2(0.4), 0.0f, SnakEngine::Color(255, 255, 0, 255));
 
 
 	m_cHudSpriteBatch.End();

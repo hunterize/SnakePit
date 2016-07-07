@@ -8,11 +8,13 @@
 #include <SDL\SDL.h>
 #include <glm\gtx\rotate_vector.hpp>
 
+#include <SnakEngine\AudioEngine.h>
+
 
 class Gun
 {
 public:
-	Gun(std::string name, float fireSpan, int bulletsPerShot, float spread, float bulletDamage, float bulletSpeed);
+	Gun(std::string name, float fireSpan, int bulletsPerShot, float spread, float bulletDamage, float bulletSpeed, SnakEngine::SoundEffect fireEffect);
 	~Gun();
 
 	void Update(bool isMouseDown, const glm::vec2& position, const glm::vec2& direction, std::vector<Bullet>& bullets);
@@ -33,5 +35,7 @@ private:
 	float m_fSpeed;
 	//bullet damage
 	float m_fDamage;
+
+	SnakEngine::SoundEffect m_cFireEffect;
 };
 
