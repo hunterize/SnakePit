@@ -12,6 +12,7 @@
 #include <SnakEngine\Timing.h>
 #include <SnakEngine\Errors.h>
 #include <SnakEngine\AudioEngine.h>
+#include <SnakEngine\ParticleEngine2D.h>
 
 
 #include <iostream>
@@ -28,6 +29,7 @@
 #include "resource.h"
 #include <SDL\SDL.h>
 #include <SDL\SDL_syswm.h>
+#include <glm\gtx\rotate_vector.hpp>
 
 enum class GameState
 {
@@ -58,6 +60,7 @@ private:
 	void CheckGameStatus();
 	bool IsGameOver();
 	void DrawHud();
+	void AddBlood(const glm::vec2& position, int numParticles);
 
 	SnakEngine::SWindow m_cWindow;
 	SnakEngine::GLSLProgram m_cShader;
@@ -103,5 +106,12 @@ private:
 
 	//audio engine
 	SnakEngine::AudioEngine m_cAudioEngine;
+
+	//particle engine
+	SnakEngine::ParticleEngine2D m_cParticleEngine;
+
+	//blood particle
+	SnakEngine::ParticleBatch2D* m_pBloodParticleBatch;
+
 };
 

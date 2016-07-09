@@ -83,7 +83,19 @@ void GameWorld::InitSystem()
 	m_cHudCamera.Init(m_iScreenWidth, m_iScreenHeight);
 	m_cHudCamera.SetPosition(glm::vec2(m_iScreenWidth / 2, m_iScreenHeight / 2));
 
-	//initialize 
+	//initialize blood particle batch
+	m_pBloodParticleBatch = new SnakEngine::ParticleBatch2D();
+
+	//lambda function to define update function
+	m_pBloodParticleBatch->Init(1000,1.0f,SnakEngine::ResourceManager::GetTexture("Textures/particle.png"),
+		[](SnakEngine::Particle2D& particle, float deltaTime)
+		{
+			particle.position += particle.velocity * deltaTime;
+			particle.color.a = (GLubyte)(particle.life * 255.0f);
+		}
+	);
+
+	m_cParticleEngine.AddParticleBatch(m_pBloodParticleBatch);
 
 
 }
@@ -129,7 +141,7 @@ void GameWorld::InitLevel()
 	}
 
 
-	//Initialize background music
+	//Initialize level background music
 	SnakEngine::Music music = m_cAudioEngine.LoadMusic("Sound/XYZ.ogg");
 	music.Play(-1);
 
@@ -172,6 +184,8 @@ void GameWorld::GameLoop()
 			UpdateAgent(deltaTime);
 
 			UpdateBullet(deltaTime);
+
+			m_cParticleEngine.Update(deltaTime);
 
 			UpdateCamera(deltaTime);
 
@@ -389,6 +403,9 @@ void GameWorld::UpdateBullet(float elapseTime)
 		{
 			if (m_cBullet[i].CollideWithAgent(m_cZombies[j]))
 			{
+				//add blood particle
+				AddBlood(m_cBullet[i].GetPosition(), 5);
+		
 				//do damage to zombile
 				if (m_cZombies[j]->ApplyDemage(m_cBullet[i].GetDamage()))
 				{
@@ -427,6 +444,9 @@ void GameWorld::UpdateBullet(float elapseTime)
 			{
 				if (m_cBullet[i].CollideWithAgent(m_cHumens[j]))
 				{
+					//add blood particle
+					AddBlood(m_cBullet[i].GetPosition(), 5);
+
 					//do damage to zombile
 					if (m_cHumens[j]->ApplyDemage(m_cBullet[i].GetDamage()))
 					{
@@ -543,8 +563,13 @@ void GameWorld::DrawGame()
 
 	m_cSpriteBatch.RenderBatch();
 
+	//draw particles
+	m_cParticleEngine.Draw(&m_cSpriteBatch);
+	
 	//draw HUD
 	DrawHud();
+
+
 
 	m_cShader.unuse();
 
@@ -579,6 +604,23 @@ void GameWorld::DrawHud()
 
 	m_cHudSpriteBatch.End();
 	m_cHudSpriteBatch.RenderBatch();
+}
+
+//add blood particles for one shot
+void GameWorld::AddBlood(const glm::vec2& position, int numParticles)
+{
+	static std::mt19937 randEngine(time(nullptr));
+	static std::uniform_real_distribution<float> angles(0.0f, 360.0f);
+
+	glm::vec2 velocity(40.0f, 0.0f);
+	SnakEngine::Color color(255, 0, 0, 255);
+
+	for (int i = 0; i < numParticles; i++)
+	{
+		m_pBloodParticleBatch->AddParticle(position, glm::rotate(velocity, angles(randEngine)), color, 30.0f);
+	}
+
+
 }
 
 

@@ -8,7 +8,7 @@ namespace SnakEngine
 	{
 		if (Mix_PlayChannel(-1, m_pChunk, loops) == -1)
 		{
-			if (Mix_PlayChannel(0, m_pChunk, loops) == -1)
+			//if (Mix_PlayChannel(0, m_pChunk, loops) == -1)
 			{
 				fatalError("Mix_PlayChannel Error: " + std::string(Mix_GetError()));
 			}
