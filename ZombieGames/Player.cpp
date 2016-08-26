@@ -22,9 +22,11 @@ void Player::Init(float speed, glm::vec2 pos, SnakEngine::InputManager* inputMan
 	m_fHealth = health;
 
 	m_cColor.r = 255;
-	m_cColor.g = 0;
-	m_cColor.b = 0;
+	m_cColor.g = 255;
+	m_cColor.b = 255;
 	m_cColor.a = 255;
+
+	m_iTextureID = SnakEngine::ResourceManager::GetTexture("Textures/player.png").ID;
 }
 
 void Player::Update(const std::vector<std::string>& levelData, float elapseTime)
@@ -61,20 +63,22 @@ void Player::Update(const std::vector<std::string>& levelData, float elapseTime)
 		m_iCurrentGun = 2;
 	}
 
+	glm::vec2 mouseCoords = m_pInputManager->GetMouseCoords();
+	mouseCoords = m_pCamera->ConvertScreenToWorld(mouseCoords);
+
+	//get bullet position and direction
+	glm::vec2 bulletPos = m_cPosition + glm::vec2(AGENT_RADIUS);
+	glm::vec2 bulletDir = glm::normalize(mouseCoords - bulletPos);
+
+	//update player direction to point to the mouse
+	m_cDirection = bulletDir;
+
 	if (m_iCurrentGun != -1)
 	{
-
-		glm::vec2 mouseCoords = m_pInputManager->GetMouseCoords();
-		mouseCoords = m_pCamera->ConvertScreenToWorld(mouseCoords);
-
-		glm::vec2 bulletPos = m_cPosition + glm::vec2(AGENT_RADIUS);
-		glm::vec2 bulletDir = glm::normalize(mouseCoords - bulletPos);
 
 		//let the bullet start from the outside of the player
 		bulletPos -= glm::vec2(BULLET_RADIUS);
 		bulletPos += glm::vec2(AGENT_RADIUS) * bulletDir;
-
-
 
 		m_cGuns[m_iCurrentGun]->Update(m_pInputManager->isKeyDown(SDL_BUTTON_LEFT), bulletPos, bulletDir, *m_pBullets);
 

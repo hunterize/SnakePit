@@ -17,9 +17,9 @@ void Zombie::Init(float speed, glm::vec2 pos, float health)
 	m_fSpeed = speed;
 	m_fHealth = health;
 
-	m_cColor.r = 200;
+	m_cColor.r = 100;
 	m_cColor.g = 0;
-	m_cColor.b = 200;
+	m_cColor.b = 255;
 	m_cColor.a = 255;
 
 	//create static random engine
@@ -35,6 +35,8 @@ void Zombie::Init(float speed, glm::vec2 pos, float health)
 
 	//normalize the direction vector
 	m_cDirection = glm::normalize(m_cDirection);
+
+	m_iTextureID = SnakEngine::ResourceManager::GetTexture("Textures/zombie.png").ID;
 }
 
 void Zombie::Update(const std::vector<std::string>& levelData, float elapseTime)

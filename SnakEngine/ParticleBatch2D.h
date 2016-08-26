@@ -24,8 +24,8 @@ namespace SnakEngine
 	};
 
 
-	//Defult particle update function, should be inline
-	inline void DefaultParticleUpdate(Particle2D& particle, float deltaTime)
+	//Defult particle update function, should be inline or static
+	static void DefaultParticleUpdate(Particle2D& particle, float deltaTime)
 	{
 		particle.position += particle.velocity * deltaTime;
 	}

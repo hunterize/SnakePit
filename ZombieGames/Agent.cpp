@@ -13,7 +13,7 @@ Agent::~Agent()
 
 void Agent::Draw(SnakEngine::SpriteBatch& spriteBatch)
 {
-	static int textureID = SnakEngine::ResourceManager::GetTexture("Textures/circle.png").ID;
+	//static int textureID = SnakEngine::ResourceManager::GetTexture("Textures/circle.png").ID;
 
 	const glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
@@ -23,7 +23,7 @@ void Agent::Draw(SnakEngine::SpriteBatch& spriteBatch)
 	destRect.z = AGENT_RADIUS * 2;
 	destRect.w = AGENT_RADIUS * 2;
 	
-	spriteBatch.Draw(destRect, uvRect, textureID, 0.0f, m_cColor);
+	spriteBatch.Draw(destRect, uvRect, m_iTextureID, 0.0f, m_cColor, m_cDirection);
 }
 
 bool Agent::ApplyDemage(float damage)

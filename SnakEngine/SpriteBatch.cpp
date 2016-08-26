@@ -2,8 +2,75 @@
 
 namespace SnakEngine
 {
+	Glyph::Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color)
+	{
+		m_uiTexture = texture;
+		m_fDepth = depth;
 
+		m_cTopLeft.color = color;
+		m_cTopLeft.SetPosition(destRect.x, destRect.y + destRect.w);
+		m_cTopLeft.SetUV(uvRect.x, uvRect.y + uvRect.w);
 
+		m_cBottomLeft.color = color;
+		m_cBottomLeft.SetPosition(destRect.x, destRect.y);
+		m_cBottomLeft.SetUV(uvRect.x, uvRect.y);
+
+		m_cBottomRight.color = color;
+		m_cBottomRight.SetPosition(destRect.x + destRect.z, destRect.y);
+		m_cBottomRight.SetUV(uvRect.x + uvRect.z, uvRect.y);
+
+		m_cTopRight.color = color;
+		m_cTopRight.SetPosition(destRect.x + destRect.z, destRect.y + destRect.w);
+		m_cTopRight.SetUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+	}
+
+	Glyph::Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color, float angle)
+	{
+		m_uiTexture = texture;
+		m_fDepth = depth;
+
+		//the half rectangle of the Glyph Rect
+		glm::vec2 rec(destRect.z / 2.0f, destRect.w / 2.0f);
+
+		//move the centre of the glyph to the origin (0,0)
+		glm::vec2 topleft(-rec.x, rec.y);
+		glm::vec2 bottomleft(-rec.x, -rec.y);
+		glm::vec2 bottomright(rec.x, -rec.y);
+		glm::vec2 topright(rec.x, rec.y);
+
+		//rotate the glyph and move it back (bottom left vertex to origin) 
+		topleft = RotatePoint(topleft, angle) + rec;
+		bottomleft = RotatePoint(bottomleft, angle) + rec;
+		bottomright = RotatePoint(bottomright, angle) + rec;
+		topright = RotatePoint(topright, angle) + rec;
+
+		m_cTopLeft.color = color;
+		m_cTopLeft.SetPosition(destRect.x + topleft.x, destRect.y + topleft.y);
+		m_cTopLeft.SetUV(uvRect.x, uvRect.y + uvRect.w);
+
+		m_cBottomLeft.color = color;
+		m_cBottomLeft.SetPosition(destRect.x + bottomleft.x, destRect.y + bottomleft.y);
+		m_cBottomLeft.SetUV(uvRect.x, uvRect.y);
+
+		m_cBottomRight.color = color;
+		m_cBottomRight.SetPosition(destRect.x + bottomright.x, destRect.y + bottomright.y);
+		m_cBottomRight.SetUV(uvRect.x + uvRect.z, uvRect.y);
+
+		m_cTopRight.color = color;
+		m_cTopRight.SetPosition(destRect.x + topright.x, destRect.y + topright.y);
+		m_cTopRight.SetUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+	}
+
+	glm::vec2 Glyph::RotatePoint(const glm::vec2& pos, float angle)
+	{
+		glm::vec2 vertex;
+
+		//rotate a point around the origin(0,0)
+		vertex.x = pos.x * cos(angle) - pos.y * sin(angle);
+		vertex.y = pos.x * sin(angle) + pos.y * cos(angle);
+
+		return vertex;
+	}
 
 	SpriteBatch::SpriteBatch() : m_uiVbo(0), m_uiVao(0)
 	{
@@ -51,6 +118,31 @@ namespace SnakEngine
 		m_Glyphs.emplace_back(destRect, uvRect, texture, depth, color);
 
 	}
+
+	void SpriteBatch::Draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color, float angle)
+	{
+
+		m_Glyphs.emplace_back(destRect, uvRect, texture, depth, color, angle);
+
+	}
+
+	void SpriteBatch::Draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color, glm::vec2 dir)
+	{
+
+		const glm::vec2 initial(1.0f, 0.0f);
+		
+		//vector dot production to alculate the angle from the initial direction (positive x) to the dir 
+		float angle = acos(glm::dot(initial, dir));
+		
+		if (dir.y < 0.0f)
+		{
+			angle = -angle;
+		}
+
+		m_Glyphs.emplace_back(destRect, uvRect, texture, depth, color, angle);
+
+	}
+
 	void SpriteBatch::RenderBatch()
 	{
 		glBindVertexArray(m_uiVao);

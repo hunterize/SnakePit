@@ -33,9 +33,12 @@ protected:
 
 	std::vector<CollisionTile> m_cCollisionBox;
 	glm::vec2 m_cPosition;
+	glm::vec2 m_cDirection = glm::vec2(1.0f, 0.0f);
+
 	SnakEngine::Color m_cColor;
 	float m_fSpeed;
 	float m_fHealth;
 	const float AGENT_RADIUS;
+	GLuint m_iTextureID;
 };
 

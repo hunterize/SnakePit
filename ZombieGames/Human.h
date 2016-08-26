@@ -18,7 +18,6 @@ public:
 	virtual void Update(const std::vector<std::string>& levelData, float elapseTime) override;
 
 private:
-	glm::vec2 m_cDirection;
 	int m_iFrame;
 };
 

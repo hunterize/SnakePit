@@ -2,7 +2,7 @@
 
 
 
-Human::Human():m_iFrame(0),m_cDirection(glm::vec2(1.0f))
+Human::Human():m_iFrame(0)
 {
 }
 
@@ -18,7 +18,7 @@ void Human::Init(float speed, glm::vec2 pos, float health)
 	m_fHealth = health;
 
 	m_cColor.r = 0;
-	m_cColor.g = 200;
+	m_cColor.g = 255;
 	m_cColor.b = 0;
 	m_cColor.a = 255;
 
@@ -35,6 +35,8 @@ void Human::Init(float speed, glm::vec2 pos, float health)
 
 	//normalize the direction vector
 	m_cDirection = glm::normalize(m_cDirection);
+
+	m_iTextureID = SnakEngine::ResourceManager::GetTexture("Textures/human.png").ID;
 
 
 }

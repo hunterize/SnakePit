@@ -16,27 +16,11 @@ namespace SnakEngine
 	{
 	public:
 		Glyph() {};
-		Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color)
-		{
-			m_uiTexture = texture;
-			m_fDepth = depth;
+		//for those sprites not moving and rotating, like walls and bricks
+		Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color);
+		//for those angents
+		Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color, float angle);
 
-			m_cTopLeft.color = color;
-			m_cTopLeft.SetPosition(destRect.x, destRect.y + destRect.w);
-			m_cTopLeft.SetUV(uvRect.x, uvRect.y + uvRect.w);
-
-			m_cBottomLeft.color = color;
-			m_cBottomLeft.SetPosition(destRect.x, destRect.y);
-			m_cBottomLeft.SetUV(uvRect.x, uvRect.y);
-
-			m_cBottomRight.color = color;
-			m_cBottomRight.SetPosition(destRect.x + destRect.z, destRect.y);
-			m_cBottomRight.SetUV(uvRect.x + uvRect.z, uvRect.y);
-
-			m_cTopRight.color = color;
-			m_cTopRight.SetPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-			m_cTopRight.SetUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-		}
 		GLuint m_uiTexture;
 		GLfloat m_fDepth;
 
@@ -44,6 +28,9 @@ namespace SnakEngine
 		Vertex m_cBottomLeft;
 		Vertex m_cTopRight;
 		Vertex m_cBottomRight;
+
+	private:
+		glm::vec2 RotatePoint(const glm::vec2& pos, float angle);
 
 	};
 
@@ -77,6 +64,10 @@ namespace SnakEngine
 		void Begin(GlyphSortType sortType = GlyphSortType::TEXTURE);
 		void End();
 		void Draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color);
+		//draw glyph with a rotation angle
+		void Draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color, float angle);
+		//draw glyph with a direction of the rotation
+		void Draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color, const glm::vec2 dir);
 		void RenderBatch();
 	private:
 		GLuint m_uiVbo;
