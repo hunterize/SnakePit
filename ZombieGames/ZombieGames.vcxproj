@@ -73,7 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(solutiondir)dependency\include;$(solutiondir);$(IncludePath)</IncludePath>
     <LibraryPath>$(solutiondir)Debug;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -83,6 +83,8 @@
     <IncludePath>$(solutiondir)dependency\include;$(solutiondir);$(IncludePath)</IncludePath>
     <LibraryPath>$(solutiondir)Release;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\TMP\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -101,6 +103,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SnakEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SolutionDir)Dependency\lib\SDL\SDL2.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\GLEW\glew32.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -135,6 +143,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SnakEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(SolutionDir)Dependency\lib\SDL\SDL2.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\GLEW\glew32.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\ttf\*.dll" "$(Outdir)"
+xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"
+xcopy /y /e "$(ProjectDir)Fonts\*.*" "$(Outdir)Fonts\"
+xcopy /y /e "$(ProjectDir)Levels\*.*" "$(Outdir)Levels\"
+xcopy /y /e "$(ProjectDir)Shaders\*.*" "$(Outdir)Shaders\"
+xcopy /y /e "$(ProjectDir)Sound\*.*" "$(Outdir)Sound\"
+xcopy /y /e "$(ProjectDir)Textures\*.*" "$(Outdir)Textures\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
