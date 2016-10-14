@@ -1,5 +1,5 @@
 #include "GameWorld.h"
-
+#include <ctime>
 
 
 
@@ -26,8 +26,8 @@ void CGameWorld::InitSystem()
 {
 	SnakEngine::InitEngine();
 
-	m_iScreenHeight = 600;
-	m_iScreenWidth = 800;
+	m_iScreenHeight = 900;
+	m_iScreenWidth = 1600;
 
 	m_cWindow.Create("BallGame", m_iScreenWidth, m_iScreenHeight, 0);
 
@@ -43,7 +43,8 @@ void CGameWorld::InitSystem()
 
 	//initialize camera
 	m_cCamera.Init(m_iScreenWidth, m_iScreenHeight);
-	m_cCamera.SetPosition(glm::vec2(m_iScreenWidth / 2.0f, m_iScreenHeight / 2.0f));
+	m_cCamera.SetPosition(glm::vec2(m_iScreenWidth / 2, m_iScreenHeight / 2));
+	m_cCamera.Update();
 
 	//initialize shaders
 	InitShaders();
@@ -66,7 +67,74 @@ void CGameWorld::InitRenderers()
 {
 }
 void CGameWorld::InitBalls()
-{}
+{
+	const int NUM_BALLS = 1000;
+
+	//initialize random engine
+	std::mt19937 randomEngine((unsigned int)time(nullptr));
+	std::uniform_real_distribution<float> randX(0.0f, (float)m_iScreenWidth);
+	std::uniform_real_distribution<float> randY(0.0f, (float)m_iScreenHeight);
+	std::uniform_real_distribution<float> randDir(-1.0f, 1.0f);
+
+	//initialize possible ball spawn
+	std::vector<CBallSpawn> possibleBalls;
+	float fTotalProbability = 0.0f;
+
+#define ADD_BALL(p, ...) \
+	fTotalProbability += p; \
+	possibleBalls.emplace_back(__VA_ARGS__);
+
+	ADD_BALL(20.0f, SnakEngine::Color(255, 255, 255, 255), 20.0f, 1.0f, 0.1f, 7.0f, fTotalProbability);
+	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 30.0f, 2.0f, 0.1f, 3.0f, fTotalProbability);
+	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 50.0f, 4.0f, 0.0f, 0.0f, fTotalProbability);
+
+	//random probability for ball spawn
+	std::uniform_real_distribution<float> spawnProbability(0.0f, fTotalProbability);
+	
+	m_cBalls.reserve(NUM_BALLS);
+
+	CBallSpawn* pBallSpawn = &possibleBalls[0];
+
+	//randomly initialize balls
+	for (int i = 0; i < NUM_BALLS; i++)
+	{
+		//create spawn factor
+		float spawnFactor = spawnProbability(randomEngine);
+
+		//find spawnball
+		for (size_t j = 0; j < possibleBalls.size(); j++)
+		{
+			if (spawnFactor <= possibleBalls[j].probability)
+			{
+				pBallSpawn = &possibleBalls[j];
+				break;
+			}
+		}
+
+		//add ball to the ball vector
+
+		//get ball position
+		glm::vec2 pos(randX(randomEngine), randY(randomEngine));
+
+		//get ball direction
+		glm::vec2 dir(randDir(randomEngine), randDir(randomEngine));
+		if (dir.x != 0.0f || dir.y != 0.0f)
+		{
+			dir = glm::normalize(dir);
+		}
+		else
+		{
+			dir = glm::vec2(1.0f, 0.0f);
+		}
+
+		//add ball
+		m_cBalls.emplace_back(pBallSpawn->radius, pBallSpawn->mass, pos, dir * pBallSpawn->speed(randomEngine),
+			SnakEngine::ResourceManager::GetTexture("Textures/circle.png").ID,
+			pBallSpawn->color);
+	}
+
+
+}
 void CGameWorld::GameLoop()
 {
 	SnakEngine::FpsLimiter fpsLimiter;
@@ -92,18 +160,66 @@ void CGameWorld::GameLoop()
 			timeSpan -= deltaTime;
 		}
 
+		m_cCamera.Update();
 		DrawGame();
+	
 		m_fFPS = fpsLimiter.End();
 	}
 
 
 }
 void CGameWorld::Update(float eclapseTime)
-{}
+{
+	
+}
+
 void CGameWorld::DrawGame()
-{}
+{
+	//set base depth to 1.0
+	glClearDepth(1.0);
+
+	//clear color and depth buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glActiveTexture(GL_TEXTURE0);
+
+	m_cShader.use();
+
+
+	GLint textureUniform = m_cShader.GetUniformLocation("mySampler");
+	glUniform1i(textureUniform, 0);
+
+	GLint pUniform = m_cShader.GetUniformLocation("P");
+	glm::mat4 projectMatrix = m_cCamera.GetCameraMatrix();
+	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectMatrix[0][0]);
+
+	m_cSpriteBatch.Begin();
+
+	for (auto& ball : m_cBalls)
+	{
+		m_cBallRender.RenderBall(m_cSpriteBatch, ball);
+	}
+
+	//DrawHud();
+
+	m_cSpriteBatch.End();
+	m_cSpriteBatch.RenderBatch();
+
+	m_cShader.unuse();
+	m_cWindow.SwapBuffer();
+}
+
+
 void CGameWorld::DrawHud()
-{}
+{
+	const SnakEngine::Color fontColor(255, 0, 0, 255);
+
+	char buffer[64];
+	sprintf(buffer, "%.1f", m_fFPS);
+	m_pSpriteFont->draw(m_cSpriteBatch,buffer,glm::vec2(0.0f, m_iScreenHeight - 32.0f), glm::vec2(0.5f, 0.5f),0.0f,fontColor);
+}
+
+
 void CGameWorld::ProcessInput()
 {
 	SDL_Event event;

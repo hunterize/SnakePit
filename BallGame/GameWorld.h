@@ -8,6 +8,9 @@
 #include <SnakEngine\GLSLProgram.h>
 #include <SnakEngine\Timing.h>
 #include <SnakEngine\SpriteFont.h>
+#include <SnakEngine\ResourceManager.h>
+
+#include <SDL\SDL.h>
 
 #include <memory>
 

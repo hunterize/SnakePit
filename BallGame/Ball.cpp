@@ -8,6 +8,7 @@ CBall::CBall(float radius, float mass, const glm::vec2& pos, const glm::vec2& ve
 	m_fMass = mass;
 	m_cVelocity = vel;
 	m_cPosition = pos;
+	m_uiTextureID = textureid;
 	m_cColor = color;
 }
 
