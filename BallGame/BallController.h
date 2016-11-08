@@ -20,6 +20,8 @@ public:
 
 private:
 	void CheckCollision(CBall& ball1, CBall& ball2);
+	void CheckWallCollision(CBall& ball, int x, int y);
+
 	bool IsMouseOnBall(CBall& ball, float mouseX, float mouseY);
 
 	glm::vec2 GetGravityAccel();

@@ -26,8 +26,8 @@ void CGameWorld::InitSystem()
 {
 	SnakEngine::InitEngine();
 
-	m_iScreenHeight = 900;
-	m_iScreenWidth = 1600;
+	m_iScreenHeight = 800;
+	m_iScreenWidth = 1400;
 
 	m_cWindow.Create("BallGame", m_iScreenWidth, m_iScreenHeight, 0);
 
@@ -84,9 +84,9 @@ void CGameWorld::InitBalls()
 	fTotalProbability += p; \
 	possibleBalls.emplace_back(__VA_ARGS__);
 
-	ADD_BALL(20.0f, SnakEngine::Color(255, 255, 255, 255), 20.0f, 1.0f, 0.1f, 7.0f, fTotalProbability);
-	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 30.0f, 2.0f, 0.1f, 3.0f, fTotalProbability);
-	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 50.0f, 4.0f, 0.0f, 0.0f, fTotalProbability);
+	ADD_BALL(20.0f, SnakEngine::Color(255, 255, 255, 255), 10.0f, 1.0f, 5.0f, 10.0f, fTotalProbability);
+	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 20.0f, 2.0f, 1.0f, 5.0f, fTotalProbability);
+	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 30.0f, 4.0f, 0.0f, 0.0f, fTotalProbability);
 
 	//random probability for ball spawn
 	std::uniform_real_distribution<float> spawnProbability(0.0f, fTotalProbability);
@@ -170,7 +170,7 @@ void CGameWorld::GameLoop()
 }
 void CGameWorld::Update(float eclapseTime)
 {
-	
+	m_cBallController.UpdateBalls(m_cBalls, eclapseTime, m_iScreenWidth, m_iScreenHeight);
 }
 
 void CGameWorld::DrawGame()
