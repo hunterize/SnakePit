@@ -8,6 +8,11 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, float elapseTime, i
 		balls[i].m_cPosition += balls[i].m_cVelocity * elapseTime;
 
 		CheckWallCollision(balls[i], maxX, maxY);
+
+		for (int j = i + 1; j < balls.size(); j++)
+		{
+			CheckCollision(balls[i], balls[j]);
+		}
 	}
 }
 
@@ -21,11 +26,48 @@ void CBallController::onMouseUp(std::vector<CBall>& balls)
 void CBallController::onMouseMove(std::vector<CBall>& balls, float mouseX, float mouseY)
 {}
 
+
+//do ball collision by elastic collision
 void CBallController::CheckCollision(CBall& ball1, CBall& ball2)
 {
+	glm::vec2 distanceVec = ball2.m_cPosition - ball1.m_cPosition;
+	glm::vec2 distanceDir = glm::normalize(distanceVec);
 
+	float distance = glm::length(distanceVec);
+	float collisionDistance = ball1.m_fRadius + ball2.m_fRadius;
+
+	float collisionDepth = collisionDistance - distance;
+
+	//elastic collision
+	if (collisionDepth > 0 && distance > 0)
+	{
+		//do collision
+		ball1.m_cPosition -= distanceDir * collisionDepth * (ball2.m_fMass / ball1.m_fMass) / 2.0f;
+		ball2.m_cPosition += distanceDir * collisionDepth * (ball1.m_fMass / ball2.m_fMass) / 2.0f;
+
+		//velocity scalor projection along the collision direction
+		float ball1Vpv = glm::dot(ball1.m_cVelocity, distanceDir);
+		float ball2Vpv = glm::dot(ball2.m_cVelocity, distanceDir);
+
+		//ball velocity vector along the collision direction before collision
+		glm::vec2 ball1Vp = ball1Vpv * distanceDir;
+		glm::vec2 ball2Vp = ball2Vpv * distanceDir;
+
+		//1D elastic collision equation, velocity value after collision
+		float ball1Vpv1 = (ball1Vpv * (ball1.m_fMass - ball2.m_fMass) + 2 * ball2.m_fMass * ball2Vpv) / (ball1.m_fMass + ball2.m_fMass);
+		float ball2Vpv1 = (ball2Vpv * (ball2.m_fMass - ball1.m_fMass) + 2 * ball1.m_fMass * ball1Vpv) / (ball1.m_fMass + ball2.m_fMass);
+
+		//ball velocity vector along the collision direction after collision
+		glm::vec2 ball1Vp1 = ball1Vpv1 * distanceDir;
+		glm::vec2 ball2Vp1 = ball2Vpv1 * distanceDir;
+
+		ball1.m_cVelocity += ball1Vp1 - ball1Vp;
+		ball2.m_cVelocity += ball2Vp1 - ball2Vp;
+
+	}
 }
 
+//check collision with the wall
 void CBallController::CheckWallCollision(CBall& ball, int x, int y)
 {
 	//collide with wall on x axis

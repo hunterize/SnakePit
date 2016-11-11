@@ -84,9 +84,9 @@ void CGameWorld::InitBalls()
 	fTotalProbability += p; \
 	possibleBalls.emplace_back(__VA_ARGS__);
 
-	ADD_BALL(20.0f, SnakEngine::Color(255, 255, 255, 255), 10.0f, 1.0f, 5.0f, 10.0f, fTotalProbability);
-	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 20.0f, 2.0f, 1.0f, 5.0f, fTotalProbability);
-	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 30.0f, 4.0f, 0.0f, 0.0f, fTotalProbability);
+	ADD_BALL(20.0f, SnakEngine::Color(0, 255, 0, 255), 10.0f, 1.0f, 30.0f, 40.0f, fTotalProbability);
+	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 20.0f, 2.0f, 10.0f, 15.0f, fTotalProbability);
+	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 30.0f, 4.0f, 10.0f, 20.0f, fTotalProbability);
 
 	//random probability for ball spawn
 	std::uniform_real_distribution<float> spawnProbability(0.0f, fTotalProbability);
@@ -200,10 +200,14 @@ void CGameWorld::DrawGame()
 		m_cBallRender.RenderBall(m_cSpriteBatch, ball);
 	}
 
-	//DrawHud();
+	DrawHud();
 
 	m_cSpriteBatch.End();
+
 	m_cSpriteBatch.RenderBatch();
+
+
+
 
 	m_cShader.unuse();
 	m_cWindow.SwapBuffer();

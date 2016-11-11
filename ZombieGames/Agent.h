@@ -32,6 +32,7 @@ protected:
 	bool CollideWithLevel(const std::vector<std::string>& levelData);
 
 	std::vector<CollisionTile> m_cCollisionBox;
+	//the position is at the bottom left of the texture
 	glm::vec2 m_cPosition;
 	glm::vec2 m_cDirection = glm::vec2(1.0f, 0.0f);
 

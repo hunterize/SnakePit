@@ -13,6 +13,8 @@ struct CBall
 	float m_fRadius;
 	float m_fMass;
 	glm::vec2 m_cVelocity;
+
+	//ball position is at the center of the ball
 	glm::vec2 m_cPosition;
 	unsigned int m_uiTextureID = 0;
 	SnakEngine::Color m_cColor;
