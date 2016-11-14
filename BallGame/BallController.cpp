@@ -5,10 +5,19 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, float elapseTime, i
 {
 	glm::vec2 gravity = GetGravityAccel();
 
+	//if (m_iSelectedBall != -1)
+	//{
+	//	balls[m_iSelectedBall].m_cVelocity = (balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel;
+	//}
+
 	for (size_t i = 0; i < balls.size(); i++)
 	{
-		//udpate ball position
-		balls[i].m_cPosition += balls[i].m_cVelocity * elapseTime;
+		if (i != m_iSelectedBall)
+		{
+
+			//udpate ball position
+			balls[i].m_cPosition += balls[i].m_cVelocity * elapseTime;
+		}
 
 		//check collision with wall
 		CheckWallCollision(balls[i], maxX, maxY);
@@ -22,20 +31,53 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, float elapseTime, i
 
 		//apply gravity
 		balls[i].m_cVelocity += gravity * elapseTime;
-
-
 	}
+
+	//if (m_iSelectedBall != -1)
+	//{
+	//	m_cPreviousVel = balls[m_iSelectedBall].m_cVelocity;
+	//	balls[m_iSelectedBall].m_cVelocity = (balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel;
+	//	m_cPreviousPos = balls[m_iSelectedBall].m_cPosition;
+		
+	//}
 }
 
 //events
 void CBallController::onMouseDown(std::vector<CBall>& balls, float mouseX, float mouseY)
-{}
+{
+	for (int i = 0; i < balls.size(); i++)
+	{
+		if (IsMouseOnBall(balls[i], mouseX, mouseY))
+		{
+			m_iSelectedBall = i;
+			m_cGrabOffset = glm::vec2(mouseX, mouseY) - balls[i].m_cPosition;
+			m_cPreviousPos = balls[i].m_cPosition;
+			m_cPreviousVel = balls[i].m_cVelocity;
+			m_uiPreviousTime = SDL_GetTicks();
+			balls[i].m_cVelocity = glm::vec2(0.0f);
+			return;
+		}
+	}
+}
 
 void CBallController::onMouseUp(std::vector<CBall>& balls)
-{}
+{
+	if (m_iSelectedBall != -1)
+	{
+		float timeSpan = (SDL_GetTicks() - m_uiPreviousTime ) / 1000.0f;
+		balls[m_iSelectedBall].m_cVelocity = (balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / timeSpan - m_cPreviousVel;
+
+		m_iSelectedBall = -1;
+	}
+}
 
 void CBallController::onMouseMove(std::vector<CBall>& balls, float mouseX, float mouseY)
-{}
+{
+	if (m_iSelectedBall != -1)
+	{
+		balls[m_iSelectedBall].m_cPosition = glm::vec2(mouseX, mouseY) - m_cGrabOffset;
+	}
+}
 
 
 //do ball collision by elastic collision
@@ -120,9 +162,11 @@ void CBallController::CheckWallCollision(CBall& ball, int x, int y)
 
 
 
+//check if mouse position is on the ball
 bool CBallController::IsMouseOnBall(CBall& ball, float mouseX, float mouseY)
 {
-	return false;
+	return (mouseX >= ball.m_cPosition.x - ball.m_fRadius && mouseX <= ball.m_cPosition.x + ball.m_fRadius
+		    && mouseY >= ball.m_cPosition.y - ball.m_fRadius && mouseY <= ball.m_cPosition.y + ball.m_fRadius);
 }
 
 glm::vec2 CBallController::GetGravityAccel()

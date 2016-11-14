@@ -253,6 +253,18 @@ void CGameWorld::ProcessInput()
 		case SDL_KEYUP:
 			m_cInputManager.ReleaseKey(event.key.keysym.sym);
 			break;
+		case SDL_MOUSEMOTION:
+			m_cInputManager.SetMouseCoords((float)event.motion.x, (float)event.motion.y);
+			m_cBallController.onMouseMove(m_cBalls, (float)event.motion.x, (float)(m_iScreenHeight - event.motion.y));
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			m_cInputManager.PressKey(event.button.button);
+			m_cBallController.onMouseDown(m_cBalls, (float)event.button.x, (float)(m_iScreenHeight - event.button.y));
+			break;
+		case SDL_MOUSEBUTTONUP:
+			m_cInputManager.ReleaseKey(event.button.button);
+			m_cBallController.onMouseUp(m_cBalls);
+			break;
 		default:
 			break;
 		}

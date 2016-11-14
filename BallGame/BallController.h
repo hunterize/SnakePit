@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "ball.h"
+#include <SDL\SDL.h>
 
 
 enum class GravityDirection {NONE, LEFT, RIGHT, UP, DOWN};
@@ -29,7 +30,9 @@ private:
 	int m_iSelectedBall = -1;
 
 	glm::vec2 m_cPreviousPos = glm::vec2(0.0f);
+	glm::vec2 m_cPreviousVel = glm::vec2(0.0f);
 	glm::vec2 m_cGrabOffset = glm::vec2(0.0f);
+	Uint32 m_uiPreviousTime = 0.0f;
 
 	GravityDirection m_gravityDirection = GravityDirection::NONE;
 };
