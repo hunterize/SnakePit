@@ -68,7 +68,7 @@ void CGameWorld::InitRenderers()
 }
 void CGameWorld::InitBalls()
 {
-	const int NUM_BALLS = 2000;
+	const int NUM_BALLS = 1000;
 
 	//initialize random engine
 	std::mt19937 randomEngine((unsigned int)time(nullptr));
@@ -261,5 +261,26 @@ void CGameWorld::ProcessInput()
 	if (m_cInputManager.isKeyDown(SDLK_ESCAPE))
 	{
 		m_eGameState = GameState::EXIT;
+	}
+
+	if (m_cInputManager.isKeyPressed(SDLK_LEFT))
+	{
+		m_cBallController.SetGravityDirection(GravityDirection::LEFT);
+	}
+	else if (m_cInputManager.isKeyPressed(SDLK_RIGHT))
+	{
+		m_cBallController.SetGravityDirection(GravityDirection::RIGHT);
+	}
+	else if (m_cInputManager.isKeyPressed(SDLK_UP))
+	{
+		m_cBallController.SetGravityDirection(GravityDirection::UP);
+	}
+	else if (m_cInputManager.isKeyPressed(SDLK_DOWN))
+	{
+		m_cBallController.SetGravityDirection(GravityDirection::DOWN);
+	}
+	else if (m_cInputManager.isKeyPressed(SDLK_SPACE))
+	{
+		m_cBallController.SetGravityDirection(GravityDirection::NONE);
 	}
 }

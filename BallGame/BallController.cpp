@@ -3,16 +3,27 @@
 
 void CBallController::UpdateBalls(std::vector<CBall>& balls, float elapseTime, int maxX, int maxY)
 {
+	glm::vec2 gravity = GetGravityAccel();
+
 	for (size_t i = 0; i < balls.size(); i++)
 	{
+		//udpate ball position
 		balls[i].m_cPosition += balls[i].m_cVelocity * elapseTime;
 
+		//check collision with wall
 		CheckWallCollision(balls[i], maxX, maxY);
 
+
+		//check collision with balls
 		for (int j = i + 1; j < balls.size(); j++)
 		{
 			CheckCollision(balls[i], balls[j]);
 		}
+
+		//apply gravity
+		balls[i].m_cVelocity += gravity * elapseTime;
+
+
 	}
 }
 
@@ -116,5 +127,35 @@ bool CBallController::IsMouseOnBall(CBall& ball, float mouseX, float mouseY)
 
 glm::vec2 CBallController::GetGravityAccel()
 {
-	return glm::vec2(0.0f);
+	const float GRAVITY = 10.0f;
+	glm::vec2 gravity;
+
+	switch (m_gravityDirection)
+	{
+	case GravityDirection::DOWN :
+	{
+		gravity = glm::vec2(0.0f, -GRAVITY);
+		break;
+	}
+	case GravityDirection::UP:
+	{
+		gravity = glm::vec2(0.0f, GRAVITY);
+		break;
+	}
+	case GravityDirection::LEFT:
+	{
+		gravity = glm::vec2(-GRAVITY, 0.0f);
+		break;
+	}
+	case GravityDirection::RIGHT:
+	{
+		gravity = glm::vec2(GRAVITY, 0.0f);
+		break;
+	}
+	default:
+		gravity = glm::vec2(0.0f);
+		break;
+	}
+
+	return gravity;
 }
