@@ -16,6 +16,7 @@
 
 #include "ballrenderer.h"
 #include "ballcontroller.h"
+#include "Grid.h"
 
 enum class GameState
 {
@@ -49,6 +50,7 @@ private:
 	int m_iScreenHeight = 0;
 
 	std::vector<CBall> m_cBalls;
+	std::unique_ptr<CGrid> m_pGrid;
 
 	CBallRenderer m_cBallRender;
 	CBallController m_cBallController;

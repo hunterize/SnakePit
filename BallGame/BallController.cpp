@@ -1,14 +1,15 @@
 #include "BallController.h"
 
 
-void CBallController::UpdateBalls(std::vector<CBall>& balls, float elapseTime, int maxX, int maxY)
+void CBallController::UpdateBalls(std::vector<CBall>& balls, CGrid* pGrid, float elapseTime, int maxX, int maxY)
 {
 	glm::vec2 gravity = GetGravityAccel();
 
 	//if (m_iSelectedBall != -1)
 	//{
-	//	balls[m_iSelectedBall].m_cVelocity = (balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel;
+	//	balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 0.03f;
 	//}
+
 
 	for (size_t i = 0; i < balls.size(); i++)
 	{
@@ -23,23 +24,34 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, float elapseTime, i
 		CheckWallCollision(balls[i], maxX, maxY);
 
 
-		//check collision with balls
-		for (int j = i + 1; j < balls.size(); j++)
+		CCell* pNewCell = pGrid->GetCell(balls[i].m_cPosition);
+		if (pNewCell != balls[i].m_pCell)
 		{
-			CheckCollision(balls[i], balls[j]);
+			pGrid->RemoveBall(&balls[i]);
+			pGrid->AddBall(&balls[i], pNewCell);
 		}
+
+
+		//check collision with balls
+		//for (int j = i + 1; j < balls.size(); j++)
+		//{
+		//	CheckCollision(balls[i], balls[j]);
+		//}
 
 		//apply gravity
 		balls[i].m_cVelocity += gravity * elapseTime;
 	}
 
-	//if (m_iSelectedBall != -1)
-	//{
-	//	m_cPreviousVel = balls[m_iSelectedBall].m_cVelocity;
-	//	balls[m_iSelectedBall].m_cVelocity = (balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel;
-	//	m_cPreviousPos = balls[m_iSelectedBall].m_cPosition;
+
+	//update velocity of the selected ball when being grabbed
+	if (m_iSelectedBall != -1)
+	{
+		m_cPreviousVel = balls[m_iSelectedBall].m_cVelocity;
+		//balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 1.0f;
+		balls[m_iSelectedBall].m_cVelocity = balls[m_iSelectedBall].m_cPosition - m_cPreviousPos;
+		m_cPreviousPos = balls[m_iSelectedBall].m_cPosition;
 		
-	//}
+	}
 }
 
 //events
@@ -60,6 +72,8 @@ void CBallController::onMouseDown(std::vector<CBall>& balls, float mouseX, float
 	}
 }
 
+
+//update the velocity of the selected ball when mouse key is released
 void CBallController::onMouseUp(std::vector<CBall>& balls)
 {
 	if (m_iSelectedBall != -1)

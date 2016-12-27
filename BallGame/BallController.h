@@ -3,6 +3,7 @@
 #include <vector>
 #include "ball.h"
 #include <SDL\SDL.h>
+#include "Grid.h"
 
 
 enum class GravityDirection {NONE, LEFT, RIGHT, UP, DOWN};
@@ -10,7 +11,7 @@ enum class GravityDirection {NONE, LEFT, RIGHT, UP, DOWN};
 class CBallController
 {
 public:
-	void UpdateBalls(std::vector<CBall>& balls, float elapseTime, int maxX, int maxY);
+	void UpdateBalls(std::vector<CBall>& balls, CGrid* pGrid, float elapseTime, int maxX, int maxY);
 
 	//events
 	void onMouseDown(std::vector<CBall>& balls, float mouseX, float mouseY);

@@ -68,7 +68,11 @@ void CGameWorld::InitRenderers()
 }
 void CGameWorld::InitBalls()
 {
-	const int NUM_BALLS = 1000;
+	const int CELLSIZE = 12;
+
+	m_pGrid = std::make_unique<CGrid>(m_iScreenWidth, m_iScreenHeight, CELLSIZE);
+
+	const int NUM_BALLS = 2000;
 
 	//initialize random engine
 	std::mt19937 randomEngine((unsigned int)time(nullptr));
@@ -91,6 +95,7 @@ void CGameWorld::InitBalls()
 	//random probability for ball spawn
 	std::uniform_real_distribution<float> spawnProbability(0.0f, fTotalProbability);
 	
+	//set size of the internal array to prevent extra allocations
 	m_cBalls.reserve(NUM_BALLS);
 
 	CBallSpawn* pBallSpawn = &possibleBalls[0];
@@ -131,6 +136,9 @@ void CGameWorld::InitBalls()
 		m_cBalls.emplace_back(pBallSpawn->radius, pBallSpawn->mass, pos, dir * pBallSpawn->speed(randomEngine),
 			SnakEngine::ResourceManager::GetTexture("Textures/circle.png").ID,
 			pBallSpawn->color);
+
+		//add ball to the grid, grid stores ball pointers
+		m_pGrid->AddBall(&m_cBalls.back());
 	}
 
 
@@ -170,7 +178,7 @@ void CGameWorld::GameLoop()
 }
 void CGameWorld::Update(float eclapseTime)
 {
-	m_cBallController.UpdateBalls(m_cBalls, eclapseTime, m_iScreenWidth, m_iScreenHeight);
+	m_cBallController.UpdateBalls(m_cBalls, m_pGrid.get(), eclapseTime, m_iScreenWidth, m_iScreenHeight);
 }
 
 void CGameWorld::DrawGame()

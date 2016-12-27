@@ -5,6 +5,7 @@
 
 #include <random>
 
+struct CCell;
 
 struct CBall
 {
@@ -18,6 +19,10 @@ struct CBall
 	glm::vec2 m_cPosition;
 	unsigned int m_uiTextureID = 0;
 	SnakEngine::Color m_cColor;
+
+	//for grid cells
+	CCell* m_pCell = nullptr;
+	int m_iCellIndex = -1;
 };
 
 
