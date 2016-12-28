@@ -21,7 +21,14 @@ public:
 	void SetGravityDirection(GravityDirection dir) { m_gravityDirection = dir; }
 
 private:
+	//check ball to ball collision
 	void CheckCollision(CBall& ball1, CBall& ball2);
+	//check ball to cell collision
+	void CheckCollision(CBall* pBall, std::vector<CBall*>& balls, int iStartIndex);
+	//check ball to grid collision
+	void CheckCollision(CGrid* pGrid);
+
+	//check wall collision
 	void CheckWallCollision(CBall& ball, int x, int y);
 
 	bool IsMouseOnBall(CBall& ball, float mouseX, float mouseY);

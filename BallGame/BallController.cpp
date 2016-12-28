@@ -42,13 +42,15 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, CGrid* pGrid, float
 		balls[i].m_cVelocity += gravity * elapseTime;
 	}
 
+	CheckCollision(pGrid);
+
 
 	//update velocity of the selected ball when being grabbed
 	if (m_iSelectedBall != -1)
 	{
 		m_cPreviousVel = balls[m_iSelectedBall].m_cVelocity;
-		//balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 1.0f;
-		balls[m_iSelectedBall].m_cVelocity = balls[m_iSelectedBall].m_cPosition - m_cPreviousPos;
+		balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 1.0f;
+		//balls[m_iSelectedBall].m_cVelocity = balls[m_iSelectedBall].m_cPosition - m_cPreviousPos;
 		m_cPreviousPos = balls[m_iSelectedBall].m_cPosition;
 		
 	}
@@ -131,6 +133,51 @@ void CBallController::CheckCollision(CBall& ball1, CBall& ball2)
 		ball1.m_cVelocity += ball1Vp1 - ball1Vp;
 		ball2.m_cVelocity += ball2Vp1 - ball2Vp;
 
+	}
+}
+
+void CBallController::CheckCollision(CBall* pBall, std::vector<CBall*>& balls, int iStartIndex)
+{
+	for (int i = iStartIndex; i < balls.size(); i++)
+	{
+		CheckCollision(*pBall, *balls[i]);
+	}
+}
+
+void CBallController::CheckCollision(CGrid* pGrid)
+{
+	for (int i = 0; i < pGrid->m_cells.size(); i++)
+	{
+		int column = i % pGrid->m_iCellX;
+		int row = i / pGrid->m_iCellX;
+
+		for (int j = 0; j < pGrid->m_cells[i].m_balls.size(); j++)
+		{
+			//check collision with own cell
+			CheckCollision(pGrid->m_cells[i].m_balls[j], pGrid->m_cells[i].m_balls, j + 1);
+
+			if (column > 0)
+			{
+				//check left cell
+				CheckCollision(pGrid->m_cells[i].m_balls[j], pGrid->GetCell(column - 1, row)->m_balls, 0);
+				if (row > 0)
+				{
+					//check top left cell
+					CheckCollision(pGrid->m_cells[i].m_balls[j], pGrid->GetCell(column - 1, row - 1)->m_balls, 0);
+				}
+				if (row < pGrid->m_iCellY - 1)
+				{
+					CheckCollision(pGrid->m_cells[i].m_balls[j], pGrid->GetCell(column, row + 1)->m_balls, 0);
+				}
+			}
+
+			if (row > 0)
+			{
+				//check top cell
+				CheckCollision(pGrid->m_cells[i].m_balls[j], pGrid->GetCell(column, row - 1)->m_balls, 0);
+			}
+
+		}
 	}
 }
 
