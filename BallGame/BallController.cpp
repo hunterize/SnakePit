@@ -5,19 +5,28 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, CGrid* pGrid, float
 {
 	glm::vec2 gravity = GetGravityAccel();
 
-	//if (m_iSelectedBall != -1)
-	//{
-	//	balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 0.03f;
-	//}
-
-
 	for (size_t i = 0; i < balls.size(); i++)
 	{
 		if (i != m_iSelectedBall)
 		{
-
 			//udpate ball position
 			balls[i].m_cPosition += balls[i].m_cVelocity * elapseTime;
+
+			//apply friction
+			const float FRICTION = 3.0f;
+
+			if(glm::length(balls[i].m_cVelocity) < 0.01f)
+			{
+				balls[i].m_cVelocity = glm::vec2(0.0f);
+			}
+			else
+			{
+				balls[i].m_cVelocity -= elapseTime * glm::normalize(balls[i].m_cVelocity) * FRICTION;
+			}
+
+			//apply gravity
+			balls[i].m_cVelocity += gravity * elapseTime;
+
 		}
 
 		//check collision with wall
@@ -38,8 +47,6 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, CGrid* pGrid, float
 		//	CheckCollision(balls[i], balls[j]);
 		//}
 
-		//apply gravity
-		balls[i].m_cVelocity += gravity * elapseTime;
 	}
 
 	CheckCollision(pGrid);
@@ -49,7 +56,7 @@ void CBallController::UpdateBalls(std::vector<CBall>& balls, CGrid* pGrid, float
 	if (m_iSelectedBall != -1)
 	{
 		m_cPreviousVel = balls[m_iSelectedBall].m_cVelocity;
-		balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 1.0f;
+		balls[m_iSelectedBall].m_cVelocity = ((balls[m_iSelectedBall].m_cPosition - m_cPreviousPos) * 2.0f / elapseTime - m_cPreviousVel) * 0.1f;
 		//balls[m_iSelectedBall].m_cVelocity = balls[m_iSelectedBall].m_cPosition - m_cPreviousPos;
 		m_cPreviousPos = balls[m_iSelectedBall].m_cPosition;
 		
@@ -111,8 +118,12 @@ void CBallController::CheckCollision(CBall& ball1, CBall& ball2)
 	if (collisionDepth > 0 && distance > 0)
 	{
 		//do collision
-		ball1.m_cPosition -= distanceDir * collisionDepth * (ball2.m_fMass / ball1.m_fMass) / 2.0f;
-		ball2.m_cPosition += distanceDir * collisionDepth * (ball1.m_fMass / ball2.m_fMass) / 2.0f;
+		//ball1.m_cPosition -= distanceDir * collisionDepth * (ball2.m_fMass / ball1.m_fMass) / 2.0f;
+		//ball2.m_cPosition += distanceDir * collisionDepth * (ball1.m_fMass / ball2.m_fMass) / 2.0f;
+
+		ball1.m_cPosition -= distanceDir * collisionDepth * (ball1.m_fRadius / (ball1.m_fRadius + ball2.m_fRadius));
+		ball2.m_cPosition += distanceDir * collisionDepth * (ball2.m_fRadius / (ball1.m_fRadius + ball2.m_fRadius));
+
 
 		//velocity scalor projection along the collision direction
 		float ball1Vpv = glm::dot(ball1.m_cVelocity, distanceDir);
@@ -167,6 +178,7 @@ void CBallController::CheckCollision(CGrid* pGrid)
 				}
 				if (row < pGrid->m_iCellY - 1)
 				{
+					//check bottom left cell
 					CheckCollision(pGrid->m_cells[i].m_balls[j], pGrid->GetCell(column, row + 1)->m_balls, 0);
 				}
 			}

@@ -4,6 +4,7 @@
 #include "ball.h"
 #include <SDL\SDL.h>
 #include "Grid.h"
+#include <iostream>
 
 
 enum class GravityDirection {NONE, LEFT, RIGHT, UP, DOWN};

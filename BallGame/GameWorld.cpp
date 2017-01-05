@@ -68,11 +68,11 @@ void CGameWorld::InitRenderers()
 }
 void CGameWorld::InitBalls()
 {
-	const int CELLSIZE = 8;
+	const int CELLSIZE = 14;
 
 	m_pGrid = std::make_unique<CGrid>(m_iScreenWidth, m_iScreenHeight, CELLSIZE);
 
-	const int NUM_BALLS = 40000;
+	const int NUM_BALLS = 20000;
 
 	//initialize random engine
 	std::mt19937 randomEngine((unsigned int)time(nullptr));
@@ -88,9 +88,9 @@ void CGameWorld::InitBalls()
 	fTotalProbability += p; \
 	possibleBalls.emplace_back(__VA_ARGS__);
 
-	ADD_BALL(20.0f, SnakEngine::Color(0, 255, 0, 255), 1.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
-	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 2.0f, 2.0f, 10.0f, 15.0f, fTotalProbability);
-	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 3.0f, 4.0f, 30.0f, 40.0f, fTotalProbability);
+	ADD_BALL(20.0f, SnakEngine::Color(0, 255, 0, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 4.0f, 2.0f, 10.0f, 15.0f, fTotalProbability);
+	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 6.0f, 4.0f, 30.0f, 40.0f, fTotalProbability);
 
 	//random probability for ball spawn
 	std::uniform_real_distribution<float> spawnProbability(0.0f, fTotalProbability);
