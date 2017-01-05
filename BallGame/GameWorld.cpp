@@ -47,7 +47,7 @@ void CGameWorld::InitSystem()
 	m_cCamera.Update();
 
 	//initialize shaders
-	InitShaders();
+	//InitShaders();
 
 	//initialize renders
 	InitRenderers();
@@ -65,7 +65,10 @@ void CGameWorld::InitShaders()
 
 void CGameWorld::InitRenderers()
 {
+	m_ballRenderers.push_back(std::make_unique<CBallRenderer>());
 }
+
+
 void CGameWorld::InitBalls()
 {
 	const int CELLSIZE = 14;
@@ -189,36 +192,13 @@ void CGameWorld::DrawGame()
 	//clear color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glActiveTexture(GL_TEXTURE0);
-
-	m_cShader.use();
-
-
-	GLint textureUniform = m_cShader.GetUniformLocation("mySampler");
-	glUniform1i(textureUniform, 0);
-
-	GLint pUniform = m_cShader.GetUniformLocation("P");
 	glm::mat4 projectMatrix = m_cCamera.GetCameraMatrix();
-	glUniformMatrix4fv(pUniform, 1, GL_FALSE, &projectMatrix[0][0]);
 
-	m_cSpriteBatch.Begin();
-
-	for (auto& ball : m_cBalls)
-	{
-		m_cBallRender.RenderBall(m_cSpriteBatch, ball);
-	}
-
-
-
-	m_cSpriteBatch.End();
-
-	m_cSpriteBatch.RenderBatch();
+	m_ballRenderers[m_iCurrentRender]->RenderBalls(m_cSpriteBatch, m_cBalls, projectMatrix);
 
 	//draw HUD
 	DrawHud();
 
-
-	m_cShader.unuse();
 	m_cWindow.SwapBuffer();
 }
 
@@ -228,6 +208,14 @@ void CGameWorld::DrawHud()
 	const SnakEngine::Color fontColor(255, 255, 0, 255);
 	char buffer[64];
 	sprintf(buffer, "%.1f", m_fFPS);
+
+	InitShaders();
+
+	glActiveTexture(GL_TEXTURE0);
+
+	m_cShader.use();
+	GLint textureUniform = m_cShader.GetUniformLocation("mySampler");
+	glUniform1i(textureUniform, 0);
 
 	glm::mat4 projectMatrix = m_cCamera.GetCameraMatrix();
 	GLint pUniform = m_cShader.GetUniformLocation("P");
@@ -239,6 +227,8 @@ void CGameWorld::DrawHud()
 
 	m_cSpriteBatch.End();
 	m_cSpriteBatch.RenderBatch();
+
+	m_cShader.unuse();
 
 }
 

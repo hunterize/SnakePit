@@ -52,7 +52,11 @@ private:
 	std::vector<CBall> m_cBalls;
 	std::unique_ptr<CGrid> m_pGrid;
 
-	CBallRenderer m_cBallRender;
+	//CBallRenderer m_cBallRender;
+	
+	int m_iCurrentRender = 0;
+	std::vector<std::unique_ptr<CBallRenderer>> m_ballRenderers;
+
 	CBallController m_cBallController;
 
 	SnakEngine::SWindow m_cWindow;
