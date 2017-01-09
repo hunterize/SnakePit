@@ -144,6 +144,13 @@ void CBallController::CheckCollision(CBall& ball1, CBall& ball2)
 		ball1.m_cVelocity += ball1Vp1 - ball1Vp;
 		ball2.m_cVelocity += ball2Vp1 - ball2Vp;
 
+
+		//add more effect to the collision, the faster ball transfers color to the other
+		if (glm::length(ball1.m_cVelocity + ball2.m_cVelocity) > 0.5f)
+		{
+			glm::length(ball1.m_cVelocity) < glm::length(ball2.m_cVelocity) ? ball2.m_cColor = ball1.m_cColor : ball1.m_cColor = ball2.m_cColor;
+		}
+
 	}
 }
 

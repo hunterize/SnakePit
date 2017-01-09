@@ -47,7 +47,7 @@ void CGameWorld::InitSystem()
 	m_cCamera.Update();
 
 	//initialize shaders
-	//InitShaders();
+	InitShaders();
 
 	//initialize renders
 	InitRenderers();
@@ -66,6 +66,9 @@ void CGameWorld::InitShaders()
 void CGameWorld::InitRenderers()
 {
 	m_ballRenderers.push_back(std::make_unique<CBallRenderer>());
+	m_ballRenderers.push_back(std::make_unique<CMomentumBallRenderer>());
+	m_ballRenderers.push_back(std::make_unique<CVelocityBallRenderer>(m_iScreenWidth, m_iScreenHeight));
+	m_ballRenderers.push_back(std::make_unique<CTrippyBallRenderer>(m_iScreenWidth, m_iScreenHeight));
 }
 
 
@@ -93,7 +96,15 @@ void CGameWorld::InitBalls()
 
 	ADD_BALL(20.0f, SnakEngine::Color(0, 255, 0, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
 	ADD_BALL(10.0f, SnakEngine::Color(0, 0, 255, 255), 4.0f, 2.0f, 10.0f, 15.0f, fTotalProbability);
-	ADD_BALL(1.0f, SnakEngine::Color(255, 0, 0, 255), 6.0f, 4.0f, 30.0f, 40.0f, fTotalProbability);
+	ADD_BALL(5.0f, SnakEngine::Color(255, 0, 0, 255), 6.0f, 4.0f, 30.0f, 40.0f, fTotalProbability);
+	ADD_BALL(10.0f, SnakEngine::Color(125, 125, 125, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(20.0f, SnakEngine::Color(0, 255, 255, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(15.0f, SnakEngine::Color(255, 0, 255, 255), 4.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(5.0f, SnakEngine::Color(0, 255, 255, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(10.0f, SnakEngine::Color(100, 200, 0, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(20.0f, SnakEngine::Color(0, 255, 100, 255), 2.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+	ADD_BALL(5.0f, SnakEngine::Color(10, 255, 100, 255), 6.0f, 1.0f, 40.0f, 45.0f, fTotalProbability);
+
 
 	//random probability for ball spawn
 	std::uniform_real_distribution<float> spawnProbability(0.0f, fTotalProbability);
@@ -209,7 +220,7 @@ void CGameWorld::DrawHud()
 	char buffer[64];
 	sprintf(buffer, "%.1f", m_fFPS);
 
-	InitShaders();
+	//InitShaders();
 
 	glActiveTexture(GL_TEXTURE0);
 
@@ -292,5 +303,15 @@ void CGameWorld::ProcessInput()
 	else if (m_cInputManager.isKeyPressed(SDLK_SPACE))
 	{
 		m_cBallController.SetGravityDirection(GravityDirection::NONE);
+	}
+
+
+	if (m_cInputManager.isKeyPressed(SDLK_1))
+	{
+		m_iCurrentRender++;
+		if (m_iCurrentRender >= m_ballRenderers.size())
+		{
+			m_iCurrentRender = 0;
+		}
 	}
 }

@@ -15,6 +15,9 @@
 #include <memory>
 
 #include "ballrenderer.h"
+#include "MomentumBallRenderer.h"
+#include "VelocityBallRenderer.h"
+#include "TrippyBallRenderer.h"
 #include "ballcontroller.h"
 #include "Grid.h"
 
