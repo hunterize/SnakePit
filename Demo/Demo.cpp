@@ -6,12 +6,16 @@
 #include <GLEW\glew.h>
 
 
-#include "MainGame.h"
+//#include "MainGame.h"
+
+#include "App.h"
 
 int main(int argc, char** argv)
 {
-	MainGame mainGame;
-	mainGame.run();
+	//MainGame mainGame;
+	//mainGame.run();
+	CApp app;
+	app.run();
 
 	return 0;
 }
