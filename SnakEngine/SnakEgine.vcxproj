@@ -162,6 +162,8 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     <ClInclude Include="Errors.h" />
     <ClInclude Include="GLSLProgram.h" />
     <ClInclude Include="GLTexture.h" />
+    <ClInclude Include="IGameScreen.h" />
+    <ClInclude Include="IGameWorld.h" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IOManager.h" />
@@ -169,6 +171,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     <ClInclude Include="ParticleEngine2D.h" />
     <ClInclude Include="picoPNG.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ScreenList.h" />
     <ClInclude Include="SnakEngine.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteBatch.h" />
@@ -183,6 +186,8 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     <ClCompile Include="Camera2D.cpp" />
     <ClCompile Include="Errors.cpp" />
     <ClCompile Include="GLSLProgram.cpp" />
+    <ClCompile Include="IGameScreen.cpp" />
+    <ClCompile Include="IGameWorld.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IOManager.cpp" />
@@ -190,6 +195,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     <ClCompile Include="ParticleEngine2D.cpp" />
     <ClCompile Include="picoPNG.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ScreenList.cpp" />
     <ClCompile Include="SnakEngine.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteBatch.cpp" />

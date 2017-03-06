@@ -1,4 +1,6 @@
 #pragma once
+//#include "IGameWorld.h"
+
 namespace SnakEngine
 {
 	enum class ScreenState 

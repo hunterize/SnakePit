@@ -126,11 +126,14 @@ namespace SnakEngine
 
 		m_pCurrentScreen = m_pScreenList->GetCurrentScreen();
 		m_pCurrentScreen->OnStart();
+		m_pCurrentScreen->SetRunning();
+
+		return true;
 	}
 
 	bool IGameWorld::InitSystem()
 	{
-		m_cWindow.Create("Default", 1600, 900, 0);
+		m_cWindow.Create("Default", 1400, 600, 0);
 		return true;
 	}
 
@@ -141,6 +144,7 @@ namespace SnakEngine
 			case SDL_QUIT :
 			{
 				m_bIsRunning = false;
+				Exit();
 				break;
 			}
 			case SDL_KEYDOWN :

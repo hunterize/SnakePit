@@ -1,11 +1,12 @@
 #pragma once
-#include "IGameScreen.h"
+//#include "IGameScreen.h"
 #include <vector>
 
 namespace SnakEngine
 {
 
 	class IGameWorld;
+	class IGameScreen;
 
 	class CScreenList
 	{
@@ -14,6 +15,8 @@ namespace SnakEngine
 		~CScreenList();
 
 		void AddScreen(IGameScreen* pScreen);
+		void SetScreen(int iIndex);
+
 		IGameScreen* MoveToNextScreen();
 		IGameScreen* MoveToPreviousScreen();
 		IGameScreen* GetCurrentScreen();

@@ -1,5 +1,5 @@
 #include "ScreenList.h"
-
+#include "IGameScreen.h"
 
 namespace SnakEngine
 {
@@ -10,6 +10,7 @@ namespace SnakEngine
 
 	CScreenList::~CScreenList()
 	{
+		Destroy();
 	}
 
 	void CScreenList::AddScreen(IGameScreen* pScreen)
@@ -19,6 +20,11 @@ namespace SnakEngine
 
 		pScreen->Create();
 		pScreen->SetParentGame(m_pMainGame);
+	}
+
+	void CScreenList::SetScreen(int iIndex)
+	{
+		m_iCurrentScreenIndex = iIndex;
 	}
 
 	IGameScreen* CScreenList::MoveToNextScreen()
