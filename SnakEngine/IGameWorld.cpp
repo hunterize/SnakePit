@@ -116,12 +116,14 @@ namespace SnakEngine
 
 		//SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
+
 		if (!InitSystem())
 		{
 			return false;
 		}
 
 		OnInit();
+
 		AddScreens();
 
 		m_pCurrentScreen = m_pScreenList->GetCurrentScreen();

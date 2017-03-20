@@ -17,6 +17,10 @@ namespace SnakEngine
 	void SWindow::Create(std::string windowName, int windowWidth, int windowHeight, Uint32 windowStyle)
 	{
 		Uint32 flag = SDL_WINDOW_OPENGL;
+
+		m_iHeight = windowHeight;
+		m_iWidth = windowWidth;
+
 		if (windowStyle & WindowStyle::INVISIBLE)
 		{
 			flag |= SDL_WINDOW_HIDDEN;
