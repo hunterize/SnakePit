@@ -159,6 +159,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
   <ItemGroup>
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Camera2D.h" />
+    <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="Errors.h" />
     <ClInclude Include="GLSLProgram.h" />
     <ClInclude Include="GLTexture.h" />
@@ -184,6 +185,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
   <ItemGroup>
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera2D.cpp" />
+    <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="Errors.cpp" />
     <ClCompile Include="GLSLProgram.cpp" />
     <ClCompile Include="IGameScreen.cpp" />

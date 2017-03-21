@@ -47,6 +47,8 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 	std::uniform_real_distribution<float> size(0.5f, 4.0f);
 	std::uniform_int_distribution<int> color(50, 255);
 
+	m_cTexture = SnakEngine::ResourceManager::GetTexture("Textures/bricks_top.png");
+
 	//create crates
 	for (int i = 0; i < 100; i++)
 	{
@@ -56,7 +58,7 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 		col.b = color(randEngine);
 		col.a = 255;
 		CCrate crate;
-		crate.Init(m_pWorld.get(), glm::vec2(xPos(randEngine), yPos(randEngine)), glm::vec2(size(randEngine), size(randEngine)), col);
+		crate.Init(m_pWorld.get(), glm::vec2(xPos(randEngine), yPos(randEngine)), glm::vec2(size(randEngine), size(randEngine)), m_cTexture, col);
 		m_cCrates.push_back(crate);
 	}
 
@@ -69,21 +71,29 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 	m_cShader.AddAttribute("vertexUV");
 	m_cShader.LinkShaders();
 
-	m_cTexture = SnakEngine::ResourceManager::GetTexture("Textures/bricks_top.png");
+
 
 	m_cCamera.Init(m_cWindow->GetWidth(), m_cWindow->GetHeight());
 	m_cCamera.SetScale(10.0f);
+
+	m_cDebugRenderer.Init();
 }
 
 void CGamePlayScreen::CGamePlayScreen::Destroy()
-{}
+{
+	m_cDebugRenderer.Dispose();
+}
 
 void CGamePlayScreen::OnStart()
 {
 }
 
 void CGamePlayScreen::OnExit()
-{}
+{
+	//change state otherwise render.dispose() will crash
+	this->m_eState = SnakEngine::ScreenState::NONE;
+	//m_cDebugRenderer.Dispose();
+}
 
 void CGamePlayScreen::Update()
 {
@@ -112,20 +122,33 @@ void CGamePlayScreen::Draw()
 
 	for (auto& box : m_cCrates)
 	{
-		glm::vec4 destRect;
-		destRect.x = box.GetBody()->GetPosition().x - box.GetDimension().x / 2.0f;
-		destRect.y = box.GetBody()->GetPosition().y - box.GetDimension().y / 2.0f;
-		destRect.z = box.GetDimension().x;
-		destRect.w = box.GetDimension().y;
-
-		m_cSpriteBatch.Draw(destRect, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), m_cTexture.ID, 0.0f, box.GetColor(), box.GetBody()->GetAngle());
-
+		box.Draw(m_cSpriteBatch);
 	}
 
 	m_cSpriteBatch.End();
 	m_cSpriteBatch.RenderBatch();
 
 	m_cShader.unuse();
+
+	//debug render
+	
+	if (m_isDebugRender)
+	{
+		glm::vec4 destRect;
+		for (auto& box : m_cCrates)
+		{
+			destRect.x = box.GetBody()->GetPosition().x - box.GetDimension().x / 2.0f;
+			destRect.y = box.GetBody()->GetPosition().y - box.GetDimension().y / 2.0f;
+			destRect.z = box.GetDimension().x;
+			destRect.w = box.GetDimension().y;
+			m_cDebugRenderer.DrawBox(destRect, SnakEngine::Color(255, 255, 255, 255), box.GetBody()->GetAngle());
+		}
+
+		m_cDebugRenderer.End();
+		m_cDebugRenderer.Render(projectionMatrix, 2.0f);
+	}
+
+	
 }
 
 void CGamePlayScreen::UpdateInput()

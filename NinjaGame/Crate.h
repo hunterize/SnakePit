@@ -3,6 +3,8 @@
 #include <Box2D\Box2D.h>
 #include <glm\glm.hpp>
 #include <SnakEngine\Vertex.h>
+#include <SnakEngine\GLTexture.h>
+#include <SnakEngine\SpriteBatch.h>
 
 class CCrate
 {
@@ -10,7 +12,14 @@ public:
 	CCrate();
 	~CCrate();
 
-	void Init(b2World* pWorld, const glm::vec2& position, const glm::vec2& dimension, SnakEngine::Color color);
+	void Init(b2World* pWorld, 
+			  const glm::vec2& position, 
+			  const glm::vec2& dimension, 
+		      SnakEngine::GLTexture texture, 
+			  SnakEngine::Color color,
+			  glm::vec4 uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+	void Draw(SnakEngine::SpriteBatch& spriteBatch);
 
 	b2Body* GetBody() { return m_pBody; }
 	b2Fixture* GetFixture() { return m_pFixture; }
@@ -22,7 +31,9 @@ private:
 	b2Body* m_pBody = nullptr;
 	b2Fixture* m_pFixture = nullptr;
 	glm::vec2 m_cDimension;
+	glm::vec4 m_cUVRect;
 	
 	SnakEngine::Color m_cColor;
+	SnakEngine::GLTexture m_cTexture;
 };
 

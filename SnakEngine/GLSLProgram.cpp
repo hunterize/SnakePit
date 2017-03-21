@@ -1,4 +1,5 @@
 #include "GLSLProgram.h"
+#include "IOManager.h"
 #include "Errors.h"
 
 #include <fstream>
@@ -14,14 +15,20 @@ namespace SnakEngine
 		m_iNumAttributes = 0;
 	}
 
-
 	GLSLProgram::~GLSLProgram()
 	{
 	}
 
-	void GLSLProgram::CompileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
+	void GLSLProgram::Dispose()
 	{
+		if (m_iProgramID)
+		{
+			glDeleteProgram(m_iProgramID);
+		}
+	}
 
+	void GLSLProgram::CompileShadersRaw(const char* vertexRaw, const char* fragmentRaw)
+	{
 		m_iProgramID = glCreateProgram();
 
 
@@ -37,12 +44,28 @@ namespace SnakEngine
 			fatalError("Fragment shader failed to be created");
 		}
 
-		CompileSingleShader(vertexShaderFilePath, m_iVertexShaderID);
-		CompileSingleShader(fragmentShaderFilePath, m_iFragmentShaderID);
+		CompileSingleShader(vertexRaw, "Vertex Shader", m_iVertexShaderID);
+		CompileSingleShader(fragmentRaw, "Fragment Shader", m_iFragmentShaderID);
 	}
 
-	void GLSLProgram::CompileSingleShader(const std::string& filePath, GLuint id)
+	void GLSLProgram::CompileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
 	{
+		std::string vertexSource;
+		std::string fragmentSource;
+
+		
+		IOManager::ReadFiletoBuffer(vertexShaderFilePath, vertexSource);
+		IOManager::ReadFiletoBuffer(fragmentShaderFilePath, fragmentSource);
+
+		CompileShadersRaw(vertexSource.c_str(), fragmentSource.c_str());
+		
+		//CompileSingleShader(vertexShaderFilePath, m_iVertexShaderID);
+		//CompileSingleShader(fragmentShaderFilePath, m_iFragmentShaderID);
+	}
+
+	void GLSLProgram::CompileSingleShader(const char* source, const std::string& name, GLuint id)
+	{
+		/*
 		std::ifstream vertexFile(filePath);
 		if (vertexFile.fail())
 		{
@@ -61,8 +84,9 @@ namespace SnakEngine
 		vertexFile.close();
 
 		const char* pContents = fileContents.c_str();
+		*/
 
-		glShaderSource(id, 1, &pContents, nullptr);
+		glShaderSource(id, 1, &source, nullptr);
 
 		glCompileShader(id);
 
@@ -81,7 +105,7 @@ namespace SnakEngine
 			glDeleteShader(id);
 
 			std::printf("%s\n", &(errorlog[0]));
-			fatalError("Shader" + filePath + "failed to compile");
+			fatalError("Shader" + name + "failed to compile");
 
 		}
 
@@ -136,7 +160,7 @@ namespace SnakEngine
 		GLint location = glGetUniformLocation(m_iProgramID, uniformName.c_str());
 		if (location == GL_INVALID_INDEX)
 		{
-			fatalError("uniform" + uniformName + "not found in shader");
+			fatalError("uniform " + uniformName + " not found in shader");
 
 		}
 		return location;

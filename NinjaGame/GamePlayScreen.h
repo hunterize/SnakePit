@@ -13,6 +13,7 @@
 #include <SnakEngine\GLTexture.h>
 #include <SnakEngine\SpriteBatch.h>
 #include <SnakEngine\ResourceManager.h>
+#include <SnakEngine\DebugRenderer.h>
 
 
 class CGamePlayScreen : public SnakEngine::IGameScreen
@@ -45,7 +46,8 @@ private:
 	SnakEngine::Camera2D m_cCamera;
 	SnakEngine::GLTexture m_cTexture;
 	SnakEngine::SWindow* m_cWindow;
+	SnakEngine::CDebugRenderer m_cDebugRenderer;
 
-
+	bool m_isDebugRender = true;
 };
 

@@ -72,7 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)dependency\include;$(SolutionDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(solutiondir)Debug;$(solutiondir)dependency\lib\Box2D;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(solutiondir)Debug;$(solutiondir)dependency\lib\Box2D\Debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\TMP\</IntDir>
   </PropertyGroup>

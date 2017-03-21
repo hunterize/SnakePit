@@ -12,6 +12,7 @@ namespace SnakEngine
 		~GLSLProgram();
 
 		void CompileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
+		void CompileShadersRaw(const char* vertexRaw, const char* fragmentRaw);
 		void LinkShaders();
 		void AddAttribute(const std::string& attributeName);
 
@@ -20,8 +21,10 @@ namespace SnakEngine
 		void use();
 		void unuse();
 
+		void Dispose();
+
 	private:
-		void CompileSingleShader(const std::string& shaderFilePath, GLuint id);
+		void CompileSingleShader(const char* source, const std::string& name, GLuint id);
 		GLuint m_iProgramID;
 		GLuint m_iVertexShaderID;
 		GLuint m_iFragmentShaderID;
