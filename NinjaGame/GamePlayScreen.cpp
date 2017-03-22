@@ -32,11 +32,11 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 
 	//create playground 
 	b2BodyDef groundDef;
-	groundDef.position.Set(0.0f, -40.0f);
+	groundDef.position.Set(0.0f, -20.0f);
 	b2Body* pGroundBody = m_pWorld->CreateBody(&groundDef);
 
 	b2PolygonShape groundShape;
-	groundShape.SetAsBox(200.0f, 20.f);
+	groundShape.SetAsBox(100.0f, 10.f);
 	pGroundBody->CreateFixture(&groundShape, 0.0f);
 
 	
@@ -44,21 +44,21 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 	std::mt19937 randEngine;
 	std::uniform_real_distribution<float> xPos(-10.0f, 10.0f);
 	std::uniform_real_distribution<float> yPos(10.0f, 50.0f);
-	std::uniform_real_distribution<float> size(0.5f, 4.0f);
+	std::uniform_real_distribution<float> size(0.5f, 2.5f);
 	std::uniform_int_distribution<int> color(50, 255);
 
 	m_cTexture = SnakEngine::ResourceManager::GetTexture("Textures/bricks_top.png");
 
 	//create crates
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		SnakEngine::Color col;
 		col.r = color(randEngine);
 		col.g = color(randEngine);
 		col.b = color(randEngine);
 		col.a = 255;
-		CCrate crate;
-		crate.Init(m_pWorld.get(), glm::vec2(xPos(randEngine), yPos(randEngine)), glm::vec2(size(randEngine), size(randEngine)), m_cTexture, col);
+		CBox crate;
+		crate.Init(m_pWorld.get(), glm::vec2(xPos(randEngine), yPos(randEngine)), glm::vec2(size(randEngine), size(randEngine)), m_cTexture, col, false);
 		m_cCrates.push_back(crate);
 	}
 
@@ -74,9 +74,11 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 
 
 	m_cCamera.Init(m_cWindow->GetWidth(), m_cWindow->GetHeight());
-	m_cCamera.SetScale(10.0f);
+	m_cCamera.SetScale(25.0f);
 
 	m_cDebugRenderer.Init();
+
+	m_cPlayer.Init(m_pWorld.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 2.0f), SnakEngine::Color(255, 255, 255, 255));
 }
 
 void CGamePlayScreen::CGamePlayScreen::Destroy()
@@ -99,6 +101,7 @@ void CGamePlayScreen::Update()
 {
 	m_cCamera.Update();
 	UpdateInput();
+	m_cPlayer.Update(m_pGame->GetInputManager());
 
 	m_pWorld->Step(1.0f / 60.0f, 6, 2);
 }
@@ -125,6 +128,8 @@ void CGamePlayScreen::Draw()
 		box.Draw(m_cSpriteBatch);
 	}
 
+	m_cPlayer.Draw(m_cSpriteBatch);
+
 	m_cSpriteBatch.End();
 	m_cSpriteBatch.RenderBatch();
 
@@ -144,6 +149,8 @@ void CGamePlayScreen::Draw()
 			m_cDebugRenderer.DrawBox(destRect, SnakEngine::Color(255, 255, 255, 255), box.GetBody()->GetAngle());
 		}
 
+		m_cPlayer.DrawDebug(m_cDebugRenderer);
+
 		m_cDebugRenderer.End();
 		m_cDebugRenderer.Render(projectionMatrix, 2.0f);
 	}
@@ -158,5 +165,10 @@ void CGamePlayScreen::UpdateInput()
 	while (SDL_PollEvent(&evt))
 	{
 		m_pGame->OnSDLEvent(evt);
+	}
+
+	if (m_pGame->GetInputManager().isKeyPressed(SDLK_1))
+	{
+		m_isDebugRender = m_isDebugRender ? false : true;
 	}
 }

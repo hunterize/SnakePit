@@ -29,7 +29,7 @@ namespace SnakEngine
 		while (m_bIsRunning)
 		{
 			limiter.Begin();
-
+			m_cInputManager.Update();
 			Update();
 			Draw();
 

@@ -156,7 +156,7 @@ namespace SnakEngine {
 		m_indices.push_back(size);
 
 	}
-	void CDebugRenderer::DrawCircle(const glm::vec4& destRect, const Color& color, float radius)
+	void CDebugRenderer::DrawCircle(const glm::vec2& center, const Color& color, float radius)
 	{
 		static const int CIRCLEVERTEXESNUM = 100;
 		int size = m_debugVertexes.size();
@@ -166,8 +166,8 @@ namespace SnakEngine {
 		for (int i = size; i < size + CIRCLEVERTEXESNUM; i++)
 		{
 			float angle = ((float)i / CIRCLEVERTEXESNUM) * PI * 2.0f;
-			m_debugVertexes[i].position.x = cos(angle) * radius + destRect.x;
-			m_debugVertexes[i].position.y = sin(angle) * radius + destRect.y;
+			m_debugVertexes[i].position.x = cos(angle) * radius + center.x;
+			m_debugVertexes[i].position.y = sin(angle) * radius + center.y;
 			m_debugVertexes[i].color = color;
 		}
 

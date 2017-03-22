@@ -6,18 +6,21 @@
 #include <SnakEngine\GLTexture.h>
 #include <SnakEngine\SpriteBatch.h>
 
-class CCrate
+class CBox
 {
 public:
-	CCrate();
-	~CCrate();
+	CBox();
+	~CBox();
 
 	void Init(b2World* pWorld, 
 			  const glm::vec2& position, 
 			  const glm::vec2& dimension, 
 		      SnakEngine::GLTexture texture, 
 			  SnakEngine::Color color,
-			  glm::vec4 uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		      bool isFixedRotation,
+			  float density = 1.0f,
+			  glm::vec4 uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)
+			  );
 
 	void Draw(SnakEngine::SpriteBatch& spriteBatch);
 

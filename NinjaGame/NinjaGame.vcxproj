@@ -175,14 +175,18 @@ xcopy /y /e "$(ProjectDir)Textures\*.*" "$(Outdir)Textures\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Crate.cpp" />
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="GamePlayScreen.cpp" />
     <ClCompile Include="NinjaGame.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
-    <ClInclude Include="Crate.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="Capsule.h" />
     <ClInclude Include="GamePlayScreen.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -29,6 +29,8 @@ namespace SnakEngine
 		void OnSDLEvent(SDL_Event& event);
 
 		float GetFPS();
+		
+		InputManager& GetInputManager() { return m_cInputManager; }
 
 	protected:
 		virtual void Update();

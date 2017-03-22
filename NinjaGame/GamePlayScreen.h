@@ -5,7 +5,8 @@
 #include <Box2D\Box2D.h>
 #include <vector>
 
-#include "crate.h"
+#include "box.h"
+#include "Player.h"
 
 #include <SnakEngine\SWindow.h>
 #include <SnakEngine\Camera2D.h>
@@ -39,7 +40,8 @@ private:
 
 	std::unique_ptr<b2World> m_pWorld;
 
-	std::vector<CCrate> m_cCrates;
+	std::vector<CBox> m_cCrates;
+	CPlayer m_cPlayer;
 
 	SnakEngine::SpriteBatch m_cSpriteBatch;
 	SnakEngine::GLSLProgram m_cShader;
@@ -48,6 +50,6 @@ private:
 	SnakEngine::SWindow* m_cWindow;
 	SnakEngine::CDebugRenderer m_cDebugRenderer;
 
-	bool m_isDebugRender = true;
+	bool m_isDebugRender = false;
 };
 

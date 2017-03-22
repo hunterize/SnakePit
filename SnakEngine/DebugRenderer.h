@@ -22,7 +22,7 @@ namespace SnakEngine {
 		void Init();
 		void Dispose();
 		void DrawBox(const glm::vec4& destRect, const Color& color, float angle);
-		void DrawCircle(const glm::vec4& destRect, const Color& color, float radius);
+		void DrawCircle(const glm::vec2& center, const Color& color, float radius);
 		void End();
 		void Render(const glm::mat4& projectMatrix, float lineWidth);
 

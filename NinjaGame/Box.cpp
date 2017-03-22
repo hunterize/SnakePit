@@ -1,21 +1,23 @@
-#include "Crate.h"
+#include "box.h"
 
 
 
-CCrate::CCrate()
+CBox::CBox()
 {
 }
 
 
-CCrate::~CCrate()
+CBox::~CBox()
 {
 }
 
-void CCrate::Init(b2World* pWorld, 
+void CBox::Init(b2World* pWorld,
 	const glm::vec2& position, 
 	const glm::vec2& dimension, 
 	SnakEngine::GLTexture texture, 
 	SnakEngine::Color color, 
+	bool isFixedRotation,
+	float density,
 	glm::vec4 uvRect)
 {
 	m_cDimension = dimension;
@@ -26,18 +28,19 @@ void CCrate::Init(b2World* pWorld,
 	b2BodyDef crateBody;
 	crateBody.type = b2_dynamicBody;
 	crateBody.position.Set(position.x, position.y);
+	crateBody.fixedRotation = isFixedRotation;
 	m_pBody = pWorld->CreateBody(&crateBody);
 
 	b2PolygonShape crateShape;
 	crateShape.SetAsBox(dimension.x / 2.0f, dimension.y / 2.0f);
 	b2FixtureDef crateFixture;
 	crateFixture.shape = &crateShape;
-	crateFixture.density = 1.0f;
+	crateFixture.density = density;
 	crateFixture.friction = 0.3f;
 	m_pFixture = m_pBody->CreateFixture(&crateFixture);
 }
 
-void CCrate::Draw(SnakEngine::SpriteBatch& spriteBatch)
+void CBox::Draw(SnakEngine::SpriteBatch& spriteBatch)
 {
 	glm::vec4 destRect;
 	destRect.x = m_pBody->GetPosition().x - m_cDimension.x / 2.0f;
