@@ -78,7 +78,7 @@ void CGamePlayScreen::CGamePlayScreen::Create()
 
 	m_cDebugRenderer.Init();
 
-	m_cPlayer.Init(m_pWorld.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 2.0f), SnakEngine::Color(255, 255, 255, 255));
+	m_cPlayer.Init(m_pWorld.get(), glm::vec2(0.0f, 30.0f), glm::vec2(2.0f), glm::vec2(1.0f, 1.8f), SnakEngine::Color(255, 255, 255, 255));
 }
 
 void CGamePlayScreen::CGamePlayScreen::Destroy()

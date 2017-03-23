@@ -18,7 +18,7 @@ public:
 		      SnakEngine::GLTexture texture, 
 			  SnakEngine::Color color,
 		      bool isFixedRotation,
-			  float density = 1.0f,
+			  float density = 3.0f,
 			  glm::vec4 uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)
 			  );
 

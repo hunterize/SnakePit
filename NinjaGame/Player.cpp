@@ -48,11 +48,11 @@ void CPlayer::Update(SnakEngine::InputManager& inputManager)
 
 	if (inputManager.isKeyDown(SDLK_a))
 	{
-		pBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
+		pBody->ApplyForceToCenter(b2Vec2(-50.0f, 0.0f), true);
 	}
 	else if (inputManager.isKeyDown(SDLK_d))
 	{
-		pBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
+		pBody->ApplyForceToCenter(b2Vec2(50.0f, 0.0f), true);
 	}
 	else
 	{
@@ -80,7 +80,7 @@ void CPlayer::Update(SnakEngine::InputManager& inputManager)
 			bool canJump = false;
 			for (int i = 0; i < b2_maxManifoldPoints; i++)
 			{
-				if (manifold.points[i].y < pBody->GetPosition().y - m_cCollisionCapsule.GetDimension().y / 2.0f + 0.01f)
+				if (manifold.points[i].y < pBody->GetPosition().y - m_cCollisionCapsule.GetDimension().y / 2.0f  + m_cCollisionCapsule.GetDimension().x / 2.0f + 0.01f)
 				{
 					canJump = true;
 					break;
@@ -90,7 +90,7 @@ void CPlayer::Update(SnakEngine::InputManager& inputManager)
 			{
 				if (inputManager.isKeyPressed(SDLK_w))
 				{
-					pBody->ApplyLinearImpulse(b2Vec2(0.0f, 100.0f), b2Vec2(0.0f, 0.0f), true);
+					pBody->ApplyLinearImpulse(b2Vec2(0.0f, 70.0f), b2Vec2(0.0f, 0.0f), true);
 					break;
 				}
 			}
