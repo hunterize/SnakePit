@@ -179,6 +179,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="SWindow.h" />
     <ClInclude Include="TextureCache.h" />
+    <ClInclude Include="TileSheet.h" />
     <ClInclude Include="Timing.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
@@ -204,6 +205,7 @@ xcopy /y "$(SolutionDir)Dependency\lib\Mixer\*.dll" "$(Outdir)"</Command>
     <ClCompile Include="SpriteFont.cpp" />
     <ClCompile Include="SWindow.cpp" />
     <ClCompile Include="TextureCache.cpp" />
+    <ClCompile Include="TileSheet.cpp" />
     <ClCompile Include="Timing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
