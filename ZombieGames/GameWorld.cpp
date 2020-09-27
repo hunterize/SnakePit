@@ -75,9 +75,8 @@ void GameWorld::InitSystem()
 	m_cHudSpriteBatch.Init();
 
 	//initialize sprite font
-	//m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/chintzy.ttf", 64);
-	m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/razerrrg_.ttf", 64);
-	
+	m_pSpriteFont = new SnakEngine::SpriteFont("Fonts/chintzy.ttf", 64);
+		
 	//initialize camera
 	m_cCamera.Init(m_iScreenWidth, m_iScreenHeight);
 	m_cHudCamera.Init(m_iScreenWidth, m_iScreenHeight);
